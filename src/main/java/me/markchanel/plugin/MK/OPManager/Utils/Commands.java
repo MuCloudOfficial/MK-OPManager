@@ -34,7 +34,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] ss){
-        if(cmd.getName().equalsIgnoreCase("mkom")){
+        if(cmd.getName().equalsIgnoreCase("mkopmanager")){
 
             if(ss[0].equalsIgnoreCase("addTempOP")){
                 if(!(Config.SuperAdministrators.contains(sender.getName()) ||

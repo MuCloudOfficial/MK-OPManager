@@ -65,6 +65,7 @@ public class Config {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         } catch (NullPointerException npe){
+            npe.printStackTrace();
             ConfigFile.renameTo(new File(ConfigFile.getParentFile().getAbsolutePath() + File.separator + "config.yml.old"));
             main.saveDefaultConfig();
             main.getServer().getConsoleSender().sendMessage(MKOPManager.Prefix + ChatColor.RED + "Config文件错误! 请检查Config.yml");

@@ -7,9 +7,9 @@ website: https://gitee.com/markchanel/mk-opmanager
 commands:
   mkopmanager:
     description: Main Command.
-    usage: /mkopmanager help
+    usage: /mkopmanager
     aliases:
-      - mkom help
+      - mkom
 
 permissions:
   mkopmanager.help:
