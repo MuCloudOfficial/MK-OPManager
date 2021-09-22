@@ -1,0 +1,22 @@
+name: MK-OPManager
+main: me.markchanel.plugin.MK.OPManager.MKOPManager
+version: BETA 000
+api-version: 1.13
+author: Mark_Chanel
+website: https://gitee.com/markchanel/mk-opmanager
+commands:
+  mkopmanager:
+    description: Main Command.
+    usage: /mkopmanager help
+    aliases:
+      - mkom help
+
+permissions:
+  mkopmanager.help:
+    default: false
+  mkopmanager.addOP:
+    default: false
+  mkopmanager.addTempOP:
+    default: false
+  mkopmanager.addCommands:
+    default: false
