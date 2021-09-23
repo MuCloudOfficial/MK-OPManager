@@ -17,7 +17,7 @@
 # 密码
 # 请注意! 该选项是本插件所有主要操作的必须要素.
 # 无密码格式限制,但不可为空!
-# 第一次启动后建议更改该选项!
+# 第一次启动建议更改该选项!
 Password: Mark_Chanel_Password
 
 # 超级管理员
@@ -51,7 +51,7 @@ BannedCommands:
 CheckInterval: 1
 
 # 语言自定义设置
-Messgaes:
+Messages:
   # 玩家输入了被禁止的命令时的回复语.
   CommandDenied: "&c你没有权限执行此命令!"
 

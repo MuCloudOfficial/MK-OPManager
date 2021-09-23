@@ -15,8 +15,8 @@ public class Messages {
         try {
             FileConfiguration f = new YamlConfiguration();
             f.load(Config.ConfigFile);
-            CommandDenied = f.getString("Messages.CommandDenied");
-            OPDenied = f.getString("Messages.OPDenied");
+            CommandDenied = StringConvert.convertOnlyColor(f.getString("Messages.CommandDenied"));
+            OPDenied = StringConvert.convertOnlyColor(f.getString("Messages.OPDenied"));
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

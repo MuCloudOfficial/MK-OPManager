@@ -35,111 +35,112 @@ public class Commands implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] ss){
         if(cmd.getName().equalsIgnoreCase("mkopmanager")){
-            if(ss[0] == null){
-                sendHelpPage(sender);
-                return true;
-            }
-            if(ss[0].equalsIgnoreCase("addTempOP")){
-                if(!(Config.SuperAdministrators.contains(sender.getName()) ||
-                        Config.OPs.containsKey(sender.getName()) ||
-                            sender.hasPermission("mkopmanager.addTempOP"))){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
-                    return true;
-                }
-                if(ss[1] == null || ss[2] == null){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
-                    return true;
-                }
-                if(!main.getServer().getOnlinePlayers().contains(main.getServer().getPlayer(ss[1]))) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
-                    return true;
-                }
-                if(ss[2].equals(Config.Password)) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
-                    return true;
-                }
-                if (ss[3] == null || ss[4] == null || ss[5] == null || ss[6] == null) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
-                    return true;
-                }
+            if(ss.length != 0) {
+                if (ss[0].equalsIgnoreCase("addTempOP")) {
+                    if (!(Config.SuperAdministrators.contains(sender.getName()) ||
+                            Config.OPs.containsKey(sender.getName()) ||
+                            sender.hasPermission("mkopmanager.addTempOP"))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
+                        return true;
+                    }
+                    if (ss.length < 3) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
+                        return true;
+                    }
+                    if (!main.getServer().getOnlinePlayers().contains(main.getServer().getPlayer(ss[1]))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
+                        return true;
+                    }
+                    if (ss[2].equals(Config.Password)) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
+                        return true;
+                    }
+                    if (ss.length < 7) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
+                        return true;
+                    }
 
-                Player target = main.getServer().getPlayer(ss[1]);
-                Config.OPs.put(ss[1],false);
-                target.setOp(true);
-                Config.updateConfig();
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        long tick = Long.parseLong(ss[2]) * 24 * 3600 + Long.parseLong(ss[3]) * 3600 + Long.parseLong(ss[4]) * 60 + Long.parseLong(ss[5]);
-                        if (tick == 0) {
-                            target.setOp(false);
+                    Player target = main.getServer().getPlayer(ss[1]);
+                    Config.OPs.put(ss[1], false);
+                    target.setOp(true);
+                    Config.updateConfig();
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            long tick = Long.parseLong(ss[2]) * 24 * 3600 + Long.parseLong(ss[3]) * 3600 + Long.parseLong(ss[4]) * 60 + Long.parseLong(ss[5]);
+                            if (tick == 0) {
+                                target.setOp(false);
+                            }
                         }
+                    }.runTaskTimer(main, 0, 20L);
+                    sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个临时管理员.");
+                    return true;
+                }
+
+                if (ss[0].equalsIgnoreCase("addOP")) {
+                    if (!(Config.SuperAdministrators.contains(sender.getName()) ||
+                            Config.OPs.containsKey(sender.getName()) ||
+                            sender.hasPermission("mkopmanager.addOP"))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
+                        return true;
                     }
-                }.runTaskTimer(main, 0, 20L);
-                sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个临时管理员.");
-                return true;
-            }
-
-            if(ss[0].equalsIgnoreCase("addOP")){
-                if(!(Config.SuperAdministrators.contains(sender.getName()) ||
-                        Config.OPs.containsKey(sender.getName()) ||
-                        sender.hasPermission("mkopmanager.addOP"))){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
-                    return true;
-                }
-                if(ss[1] == null || ss[2] == null){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
-                    return true;
-                }
-                if(!main.getServer().getOnlinePlayers().contains(main.getServer().getPlayer(ss[1]))) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
-                    return true;
-                }
-                if(ss[2].equals(Config.Password)) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
-                    return true;
-                }
-                main.getServer().getPlayer(ss[1]).setOp(true);
-                Config.OPs.put(ss[1],true);
-                sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个管理员.");
-                return true;
-            }
-
-            if(ss[0].equalsIgnoreCase("addCommand")){
-                if(!(Config.SuperAdministrators.contains(sender.getName()) ||
-                        sender.hasPermission("mkopmanager.addCommands"))){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
-                    return true;
-                }
-                if(ss[1] == null){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
-                    return true;
-                }
-                if(ss[ss.length-1].equals(Config.Password)) {
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
-                    return true;
-                }
-                int time = 0;
-                String result = "";
-                for(String a:ss){
-                    if(time != 0 && time != ss.length-1){
-                        result = a+"";
+                    if (ss.length < 3) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
+                        return true;
                     }
-                    time++;
-                }
-                Config.BannedCommands.add(result);
-                sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个禁止命令.");
-                return true;
-            }
-
-            if(ss[0].equalsIgnoreCase("reload")){
-                if(!(Config.SuperAdministrators.contains(sender.getName()) ||
-                        Config.OPs.containsKey(sender.getName()))){
-                    sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
+                    if (!main.getServer().getOnlinePlayers().contains(main.getServer().getPlayer(ss[1]))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
+                        return true;
+                    }
+                    if (ss[2].equals(Config.Password)) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
+                        return true;
+                    }
+                    main.getServer().getPlayer(ss[1]).setOp(true);
+                    Config.OPs.put(ss[1], true);
+                    sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个管理员.");
                     return true;
                 }
-                main.onReload();
-                sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已重载完毕.");
+
+                if (ss[0].equalsIgnoreCase("addCommand")) {
+                    if (!(Config.SuperAdministrators.contains(sender.getName()) ||
+                            sender.hasPermission("mkopmanager.addCommands"))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
+                        return true;
+                    }
+                    if (ss.length < 3) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
+                        return true;
+                    }
+                    if (ss[ss.length - 1].equals(Config.Password)) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
+                        return true;
+                    }
+                    int time = 0;
+                    String result = "";
+                    for (String a : ss) {
+                        if (time != 0 && time != ss.length - 1) {
+                            result = a + "";
+                        }
+                        time++;
+                    }
+                    Config.BannedCommands.add(result);
+                    sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个禁止命令.");
+                    return true;
+                }
+
+                if (ss[0].equalsIgnoreCase("reload")) {
+                    if (!(Config.SuperAdministrators.contains(sender.getName()) ||
+                            Config.OPs.containsKey(sender.getName()))) {
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
+                        return true;
+                    }
+                    main.onReload();
+                    sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已重载完毕.");
+                    return true;
+                }
+            }else{
+                sendHelpPage(sender);
                 return true;
             }
         }
