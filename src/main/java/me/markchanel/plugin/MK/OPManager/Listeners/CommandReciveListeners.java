@@ -28,7 +28,7 @@ public class CommandReciveListeners implements Listener {
         if (pcpe.getMessage().substring(1).toLowerCase().startsWith("op")){
             if (!Config.OPs.containsKey(target.getName())){
                 pcpe.setCancelled(true);
-                target.sendMessage("You not in the WhiteList! Access Denied!");
+                target.sendMessage(Messages.OPDenied);
             }
         }
     }

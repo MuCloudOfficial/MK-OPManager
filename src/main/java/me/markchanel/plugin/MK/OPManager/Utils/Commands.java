@@ -25,17 +25,20 @@ public class Commands implements CommandExecutor, TabCompleter {
         sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "插件主页: https://gitee.com/markchanel/mk-opmanager");
         sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "作者: Mark_Chanel");
         sender.sendMessage(ChatColor.GOLD+"=============="+ChatColor.AQUA+"MK-OPManager 插件命令概述"+ChatColor.GOLD+"==============");
-        sender.sendMessage(ChatColor.GOLD+"/mkom addTempOP [玩家] [密码] [时间]  "+ChatColor.AQUA+"添加一个临时管理员");
-        sender.sendMessage(ChatColor.GOLD+"/mkom addOP [玩家] [密码]      "+ChatColor.AQUA+"添加一个管理员");
-        sender.sendMessage(ChatColor.GOLD+"/mkom addCommand [命令] [密码] "+ChatColor.AQUA+"添加一个命令,它将会禁止被所有玩家执行(除超级管理外)");
-        sender.sendMessage(ChatColor.GOLD+"/mkom reload            "+ChatColor.AQUA+"重载插件");
+        sender.sendMessage(ChatColor.GOLD+"/mkom addTempOP [玩家] [密码] [时间]   "+ChatColor.AQUA+"添加一个临时管理员");
+        sender.sendMessage(ChatColor.GOLD+"/mkom addOP [玩家] [密码]            "+ChatColor.AQUA+"添加一个管理员");
+        sender.sendMessage(ChatColor.GOLD+"/mkom addCommand [命令] [密码]       "+ChatColor.AQUA+"添加一个命令,它将会禁止被所有玩家执行(除超级管理外)");
+        sender.sendMessage(ChatColor.GOLD+"/mkom reload                     "+ChatColor.AQUA+"重载插件");
         sender.sendMessage(ChatColor.GOLD+"=============="+ChatColor.AQUA+"Designed By Mark_Chanel"+ChatColor.GOLD+"==============");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] ss){
         if(cmd.getName().equalsIgnoreCase("mkopmanager")){
-
+            if(ss[0] == null){
+                sendHelpPage(sender);
+                return true;
+            }
             if(ss[0].equalsIgnoreCase("addTempOP")){
                 if(!(Config.SuperAdministrators.contains(sender.getName()) ||
                         Config.OPs.containsKey(sender.getName()) ||
@@ -129,7 +132,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            if(cmd.getName().equalsIgnoreCase("reload")){
+            if(ss[0].equalsIgnoreCase("reload")){
                 if(!(Config.SuperAdministrators.contains(sender.getName()) ||
                         Config.OPs.containsKey(sender.getName()))){
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
@@ -139,9 +142,6 @@ public class Commands implements CommandExecutor, TabCompleter {
                 sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已重载完毕.");
                 return true;
             }
-
-            sendHelpPage(sender);
-            return true;
         }
         return false;
     }

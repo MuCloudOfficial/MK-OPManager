@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,9 @@ public class Config {
     public static final String Version = "BETA 000";
     public static File ConfigFolder;
     public static File ConfigFile;
-    public static List<String> SuperAdministrators;
-    public static List<String> BannedCommands;
-    public static Map<String, Boolean> OPs;
+    public static List<String> SuperAdministrators = new ArrayList<>();
+    public static List<String> BannedCommands = new ArrayList<>();
+    public static Map<String, Boolean> OPs = new HashMap<>();
     public static int CheckInterval;
     public static String Password;
 
