@@ -2,10 +2,7 @@ package me.markchanel.plugin.MK.OPManager.Utils;
 
 import me.markchanel.plugin.MK.OPManager.MKOPManager;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -38,7 +35,6 @@ public class Commands implements CommandExecutor, TabCompleter {
             if(ss.length != 0) {
                 if (ss[0].equalsIgnoreCase("addTempOP")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            Config.OPs.containsKey(sender.getName()) ||
                             sender.hasPermission("mkopmanager.addTempOP"))) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
@@ -51,7 +47,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
                         return true;
                     }
-                    if (ss[2].equals(Config.Password)) {
+                    if (!ss[2].equals(Config.Password)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
                         return true;
                     }
@@ -59,18 +55,25 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
                         return true;
                     }
-
+                    if (Config.SuperAdministrators.contains(ss[1]) ||
+                            Config.OPs.containsKey(ss[1])){
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "该玩家已拥有管理员身份.");
+                        return true;
+                    }
                     Player target = main.getServer().getPlayer(ss[1]);
                     Config.OPs.put(ss[1], false);
                     target.setOp(true);
                     Config.updateConfig();
                     new BukkitRunnable() {
+                        long tick = Long.parseLong(ss[3]) * 24 * 3600 + Long.parseLong(ss[4]) * 3600 + Long.parseLong(ss[5]) * 60 + Long.parseLong(ss[6]);
                         @Override
                         public void run() {
-                            long tick = Long.parseLong(ss[2]) * 24 * 3600 + Long.parseLong(ss[3]) * 3600 + Long.parseLong(ss[4]) * 60 + Long.parseLong(ss[5]);
                             if (tick == 0) {
                                 target.setOp(false);
+                                target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "时间已到,你已不再拥有管理员身份.");
+                                return;
                             }
+                            tick--;
                         }
                     }.runTaskTimer(main, 0, 20L);
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个临时管理员.");
@@ -79,7 +82,6 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                 if (ss[0].equalsIgnoreCase("addOP")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            Config.OPs.containsKey(sender.getName()) ||
                             sender.hasPermission("mkopmanager.addOP"))) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
@@ -92,7 +94,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你指定的玩家不存在或未在线.");
                         return true;
                     }
-                    if (ss[2].equals(Config.Password)) {
+                    if (!ss[2].equals(Config.Password)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
                         return true;
                     }
@@ -112,7 +114,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "参数不足! 请重新输入.");
                         return true;
                     }
-                    if (ss[ss.length - 1].equals(Config.Password)) {
+                    if (!ss[ss.length - 1].equals(Config.Password)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
                         return true;
                     }
@@ -131,7 +133,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                 if (ss[0].equalsIgnoreCase("reload")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            Config.OPs.containsKey(sender.getName()))) {
+                            Config.OPs.containsKey(sender.getName()) ||
+                                sender.hasPermission("mkopmanager.admin"))) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
                     }
@@ -139,6 +142,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已重载完毕.");
                     return true;
                 }
+
+                sendHelpPage(sender);
+                return true;
+
             }else{
                 sendHelpPage(sender);
                 return true;

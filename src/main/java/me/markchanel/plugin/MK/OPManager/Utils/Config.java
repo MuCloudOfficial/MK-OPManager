@@ -58,11 +58,12 @@ public class Config {
             for(String s : f.getStringList("WhiteList")){
                 OPs.put(s,true);
             }
-            for(String s : f.getStringList("TempWhileList")){
+            for(String s : f.getStringList("TempWhiteList")){
                 OPs.put(s,false);
             }
             Messages.setMessages();
             cancelALLTempOP();
+            showConfig();
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         } catch (NullPointerException npe){
@@ -89,6 +90,14 @@ public class Config {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showConfig(){
+        main.getServer().getConsoleSender().sendMessage(String.valueOf(SuperAdministrators));
+        main.getServer().getConsoleSender().sendMessage(String.valueOf(OPs));
+        main.getServer().getConsoleSender().sendMessage(String.valueOf(BannedCommands));
+        main.getServer().getConsoleSender().sendMessage(String.valueOf(Password));
+        main.getServer().getConsoleSender().sendMessage(String.valueOf(CheckInterval));
     }
 
     public void reloadConfig(){

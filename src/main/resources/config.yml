@@ -26,15 +26,15 @@ Password: Mark_Chanel_Password
 SuperAdministrators:
 #  - Mark_Chanel
 
-# 管理员
+# 管理员白名单
 # 在该选项中列出的玩家会有 OP 身份,但权利可能低于超级管理员,这取决于 BannedCommands 中列出的 OP 限制命令.
-OPs:
+WhiteList:
 #  - Mark_Chanel
 
-# 临时管理员
+# 临时管理员白名单
 # 权利与管理员相同,但有身份限制,这取决于 /addTempOP 命令中指定的时间.
 # 但是该选项仅仅用于标记,不建议修改该选项.
-TempOPs:
+TempWhiteList:
 #  - Mark_Chanel
 
 # 禁止命令

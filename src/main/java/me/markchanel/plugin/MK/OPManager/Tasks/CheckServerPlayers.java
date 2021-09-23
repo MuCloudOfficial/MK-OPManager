@@ -19,7 +19,9 @@ public class CheckServerPlayers extends BukkitRunnable {
     @Override
     public void run() {
         for(Player target : main.getServer().getOnlinePlayers()){
-            if(target.isOp() && !Config.OPs.containsKey(target.getName())){
+            if(target.isOp() &&
+                    !Config.OPs.containsKey(target.getName()) &&
+                        !Config.SuperAdministrators.contains(target.getName())){
                 target.sendMessage(Messages.OPDenied);
                 target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,1));
                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,40,1));
