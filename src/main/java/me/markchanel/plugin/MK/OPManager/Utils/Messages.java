@@ -10,6 +10,8 @@ public class Messages {
 
     public static String CommandDenied;
     public static String OPDenied;
+    public static String OPCheckDenied;
+    public static String OPTimeOut;
 
     public static void setMessages(){
         try {
@@ -17,6 +19,8 @@ public class Messages {
             f.load(Config.ConfigFile);
             CommandDenied = StringConvert.convertOnlyColor(f.getString("Messages.CommandDenied"));
             OPDenied = StringConvert.convertOnlyColor(f.getString("Messages.OPDenied"));
+            OPTimeOut = StringConvert.convertOnlyColor(f.getString("Messages.OPTimeOut"));
+            OPCheckDenied = StringConvert.convertOnlyColor(f.getString("Messages.OPCheckDenied"));
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

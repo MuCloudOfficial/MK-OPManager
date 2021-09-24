@@ -85,7 +85,13 @@ public class Config {
 
     public static void updateConfig(){
         try {
-            updateYaml("WhiteList",OPs.keySet(),new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
+            for(Map.Entry<String,Boolean> entry : OPs.entrySet()){
+                if(entry.getValue()){
+                    updateYaml("WhiteList",entry.getKey(), new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
+                }else{
+                    updateYaml("TempWhiteList",entry.getKey(),new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
+                }
+            }
             updateYaml("BannedCommands",BannedCommands,new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -101,6 +107,7 @@ public class Config {
     }
 
     public void reloadConfig(){
+        updateConfig();
         OPs.clear();
         SuperAdministrators.clear();
         BannedCommands.clear();

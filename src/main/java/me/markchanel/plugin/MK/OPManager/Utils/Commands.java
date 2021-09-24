@@ -35,7 +35,8 @@ public class Commands implements CommandExecutor, TabCompleter {
             if(ss.length != 0) {
                 if (ss[0].equalsIgnoreCase("addTempOP")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            sender.hasPermission("mkopmanager.addTempOP"))) {
+                            sender.hasPermission("mkopmanager.addTempOP") ||
+                                sender instanceof ConsoleCommandSender)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
                     }
@@ -63,15 +64,17 @@ public class Commands implements CommandExecutor, TabCompleter {
                     Player target = main.getServer().getPlayer(ss[1]);
                     Config.OPs.put(ss[1], false);
                     target.setOp(true);
+                    target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "临时管理员" + ChatColor.GREEN + " 身份." + ChatColor.YELLOW + "时长: " + ss[3] + "日" + ss[4] + "时" + ss[5] + "分" + ss[6] + "秒");
                     Config.updateConfig();
                     new BukkitRunnable() {
-                        long tick = Long.parseLong(ss[3]) * 24 * 3600 + Long.parseLong(ss[4]) * 3600 + Long.parseLong(ss[5]) * 60 + Long.parseLong(ss[6]);
+                        int tick = Integer.parseInt(ss[3]) * 24 * 3600 + Integer.parseInt(ss[4]) * 3600 + Integer.parseInt(ss[5]) * 60 + Integer.parseInt(ss[6]);
                         @Override
                         public void run() {
                             if (tick == 0) {
                                 target.setOp(false);
+                                Config.OPs.remove(target.getName());
                                 target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "时间已到,你已不再拥有管理员身份.");
-                                return;
+                                this.cancel();
                             }
                             tick--;
                         }
@@ -82,7 +85,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 
                 if (ss[0].equalsIgnoreCase("addOP")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            sender.hasPermission("mkopmanager.addOP"))) {
+                            sender.hasPermission("mkopmanager.addOP") ||
+                                sender instanceof ConsoleCommandSender)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
                     }
@@ -98,15 +102,24 @@ public class Commands implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "密码错误.");
                         return true;
                     }
-                    main.getServer().getPlayer(ss[1]).setOp(true);
+                    if (Config.SuperAdministrators.contains(ss[1]) ||
+                            Config.OPs.containsKey(ss[1])){
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "该玩家已拥有管理员身份.");
+                        return true;
+                    }
+                    Player target = main.getServer().getPlayer(ss[1]);
+                    target.setOp(true);
                     Config.OPs.put(ss[1], true);
+                    Config.updateConfig();
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个管理员.");
+                    target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "管理员" + ChatColor.GREEN + " 身份.");
                     return true;
                 }
 
                 if (ss[0].equalsIgnoreCase("addCommand")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
-                            sender.hasPermission("mkopmanager.addCommands"))) {
+                            sender.hasPermission("mkopmanager.addCommands") ||
+                                sender instanceof ConsoleCommandSender)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
                     }
@@ -126,6 +139,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                         }
                         time++;
                     }
+                    if(Config.BannedCommands.contains(result)){
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "该命令已经禁止.");
+                        return true;
+                    }
                     Config.BannedCommands.add(result);
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个禁止命令.");
                     return true;
@@ -134,7 +151,8 @@ public class Commands implements CommandExecutor, TabCompleter {
                 if (ss[0].equalsIgnoreCase("reload")) {
                     if (!(Config.SuperAdministrators.contains(sender.getName()) ||
                             Config.OPs.containsKey(sender.getName()) ||
-                                sender.hasPermission("mkopmanager.admin"))) {
+                                sender.hasPermission("mkopmanager.admin") ||
+                                    sender instanceof ConsoleCommandSender)) {
                         sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "你没有权限执行本操作.");
                         return true;
                     }
