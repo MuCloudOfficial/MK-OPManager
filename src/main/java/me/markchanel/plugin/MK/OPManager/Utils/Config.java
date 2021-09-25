@@ -5,15 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 public class Config {
 
@@ -21,6 +15,7 @@ public class Config {
     public static final String Version = "BETA 000";
     public static File ConfigFolder;
     public static File ConfigFile;
+    public static File saveFile;
     public static List<String> SuperAdministrators = new ArrayList<>();
     public static List<String> BannedCommands = new ArrayList<>();
     public static Map<String, Boolean> OPs = new HashMap<>();
@@ -31,6 +26,7 @@ public class Config {
         main = plugin;
         ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
         ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
+        saveFile = new File(ConfigFolder + File.separator + "settings.yml");
     }
 
     public void startProcess(){
@@ -45,22 +41,45 @@ public class Config {
         if(!ConfigFile.exists()){
             main.saveDefaultConfig();
         }
+        if(!saveFile.exists()){
+            try {
+                saveFile.createNewFile();
+                InputStream is = null;
+                OutputStream os = null;
+
+                try{
+                    is = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
+                    os = new FileOutputStream(saveFile.getAbsolutePath());
+                    byte[] buf = new byte[1024];
+                    int temp;
+                    while((temp = is.read(buf)) > 0){
+                        os.write(buf,0,temp);
+                    }
+                }finally {
+                    is.close();
+                    os.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void loadConfig(){
         try {
             FileConfiguration f = new YamlConfiguration();
-            f.load(ConfigFile);
+            f.load(saveFile);
             SuperAdministrators = f.getStringList("SuperAdministrators");
             BannedCommands = f.getStringList("BannedCommands");
-            CheckInterval = f.getInt("CheckInterval");
-            Password = f.getString("Password");
             for(String s : f.getStringList("WhiteList")){
                 OPs.put(s,true);
             }
             for(String s : f.getStringList("TempWhiteList")){
                 OPs.put(s,false);
             }
+            f.load(ConfigFile);
+            CheckInterval = f.getInt("General.CheckInterval");
+            Password = f.getString("General.Password");
             Messages.setMessages();
             cancelALLTempOP();
             showConfig();
@@ -84,18 +103,28 @@ public class Config {
     }
 
     public static void updateConfig(){
-        try {
-            for(Map.Entry<String,Boolean> entry : OPs.entrySet()){
-                if(entry.getValue()){
-                    updateYaml("WhiteList",entry.getKey(), new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
-                }else{
-                    updateYaml("TempWhiteList",entry.getKey(),new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
-                }
+        List<String> ops = new ArrayList<>();
+        List<String> tempOps = new ArrayList<>();
+
+        for(Map.Entry<String,Boolean> entry : OPs.entrySet()){
+            if(entry.getValue()){
+                ops.add(entry.getKey());
+            }else{
+                tempOps.add(entry.getKey());
             }
-            updateYaml("BannedCommands",BannedCommands,new HashMap<>(),ConfigFile.getAbsolutePath(),Yaml.class.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
+        }
+
+        FileConfiguration f = new YamlConfiguration();
+        try {
+            f.load(saveFile);
+            f.set("WhiteList",ops);
+            f.set("TempWhiteList",tempOps);
+            f.set("BannedCommands",BannedCommands);
+            f.save(saveFile);
+        } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+
     }
 
     public void showConfig(){
@@ -107,82 +136,24 @@ public class Config {
     }
 
     public void reloadConfig(){
+        checkIntegrity();
         updateConfig();
         OPs.clear();
         SuperAdministrators.clear();
         BannedCommands.clear();
         Password = null;
         CheckInterval = 0;
-        checkIntegrity();
         loadConfig();
     }
 
     // 保存信息.
     public void saveConfig(){
+        checkIntegrity();
         cancelALLTempOP();
         updateConfig();
         OPs.clear();
         SuperAdministrators.clear();
         BannedCommands.clear();
         Password = null;
-    }
-
-    // org.yaml.snakeyaml 引用
-    public static Object getValue(String key, Map<String, Object> yamlMap) {
-        String[] keys = key.split("[.]");
-        Object o = yamlMap.get(keys[0]);
-        if (key.contains(".")) {
-            if (o instanceof Map) {
-                return getValue(key.substring(key.indexOf(".") + 1), (Map<String, Object>) o);
-            } else {
-                return null;
-            }
-        } else {
-            return o;
-        }
-    }
-
-    public static Map<String, Object> setValue(Map<String, Object> map, String key, Object value) {
-        String[] keys = key.split("\\.");
-
-        int len = keys.length;
-        Map temp = map;
-        for (int i = 0; i < len - 1; i++) {
-            if (temp.containsKey(keys[i])) {
-                temp = (Map) temp.get(keys[i]);
-            } else {
-                return null;
-            }
-            if (i == len - 2) {
-                temp.put(keys[i + 1], value);
-            }
-        }
-        for (int j = 0; j < len - 1; j++) {
-            if (j == len - 1) {
-                map.put(keys[j], temp);
-            }
-        }
-        return map;
-    }
-
-    public static boolean updateYaml(String key, Object value, Map<String, Object> yamlToMap, String path, Yaml yaml) {
-        Object oldVal = getValue(key, yamlToMap);
-
-        if (null == oldVal) {
-            return false;
-        }
-
-        try {
-            Map<String, Object> resultMap = setValue(yamlToMap, key, value);
-            if (resultMap != null) {
-                yaml.dump(resultMap, new FileWriter(path));
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("yaml file update failed !");
-        }
-        return false;
     }
 }

@@ -63,6 +63,9 @@ public class Commands implements CommandExecutor, TabCompleter {
                     }
                     Player target = main.getServer().getPlayer(ss[1]);
                     Config.OPs.put(ss[1], false);
+
+                    main.getServer().getConsoleSender().sendMessage(String.valueOf(Config.OPs));
+
                     target.setOp(true);
                     target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "临时管理员" + ChatColor.GREEN + " 身份." + ChatColor.YELLOW + "时长: " + ss[3] + "日" + ss[4] + "时" + ss[5] + "分" + ss[6] + "秒");
                     Config.updateConfig();
@@ -110,7 +113,9 @@ public class Commands implements CommandExecutor, TabCompleter {
                     Player target = main.getServer().getPlayer(ss[1]);
                     target.setOp(true);
                     Config.OPs.put(ss[1], true);
+
                     Config.updateConfig();
+
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个管理员.");
                     target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "管理员" + ChatColor.GREEN + " 身份.");
                     return true;

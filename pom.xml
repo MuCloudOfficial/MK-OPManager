@@ -8,13 +8,6 @@
     <artifactId>MK-OPManager</artifactId>
     <version>Ver.1.0.012</version>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.19</version>
-        </dependency>
-    </dependencies>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
