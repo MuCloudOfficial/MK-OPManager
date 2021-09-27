@@ -44,20 +44,13 @@ public class Config {
         if(!saveFile.exists()){
             try {
                 saveFile.createNewFile();
-                InputStream is = null;
-                OutputStream os = null;
 
-                try{
-                    is = this.getClass().getClassLoader().getResourceAsStream("settings.yml");
-                    os = new FileOutputStream(saveFile.getAbsolutePath());
+                try (InputStream is = this.getClass().getClassLoader().getResourceAsStream("settings.yml"); OutputStream os = new FileOutputStream(saveFile.getAbsolutePath())) {
                     byte[] buf = new byte[1024];
                     int temp;
-                    while((temp = is.read(buf)) > 0){
-                        os.write(buf,0,temp);
+                    while ((temp = is.read(buf)) > 0) {
+                        os.write(buf, 0, temp);
                     }
-                }finally {
-                    is.close();
-                    os.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -69,12 +62,12 @@ public class Config {
         try {
             FileConfiguration f = new YamlConfiguration();
             f.load(saveFile);
-            SuperAdministrators = f.getStringList("SuperAdministrators");
-            BannedCommands = f.getStringList("BannedCommands");
-            for(String s : f.getStringList("WhiteList")){
+            SuperAdministrators = f.getStringList("Settings.SuperAdministrators");
+            BannedCommands = f.getStringList("Settings.BannedCommands");
+            for(String s : f.getStringList("Settings.WhiteList")){
                 OPs.put(s,true);
             }
-            for(String s : f.getStringList("TempWhiteList")){
+            for(String s : f.getStringList("Settings.TempWhiteList")){
                 OPs.put(s,false);
             }
             f.load(ConfigFile);
@@ -117,9 +110,9 @@ public class Config {
         FileConfiguration f = new YamlConfiguration();
         try {
             f.load(saveFile);
-            f.set("WhiteList",ops);
-            f.set("TempWhiteList",tempOps);
-            f.set("BannedCommands",BannedCommands);
+            f.set("Settings.WhiteList",ops);
+            f.set("Settings.TempWhiteList",tempOps);
+            f.set("Settings.BannedCommands",BannedCommands);
             f.save(saveFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();

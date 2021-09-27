@@ -16,7 +16,7 @@ public class Messages {
     public static void setMessages(){
         try {
             FileConfiguration f = new YamlConfiguration();
-            f.load(Config.saveFile);
+            f.load(Config.ConfigFile);
             CommandDenied = StringConvert.convertOnlyColor(f.getString("Messages.CommandDenied"));
             OPDenied = StringConvert.convertOnlyColor(f.getString("Messages.OPDenied"));
             OPTimeOut = StringConvert.convertOnlyColor(f.getString("Messages.OPTimeOut"));
