@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-public class Commands implements CommandExecutor, TabCompleter {
+public class Commands implements CommandExecutor {
 
     private final MKOPManager main;
 
@@ -18,7 +18,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
     public void sendHelpPage(CommandSender sender){
         sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "MK-OPManager");
-        sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "Version: " + Config.Version);
+        sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "Ver." + Config.Version);
         sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "插件主页: https://gitee.com/markchanel/mk-opmanager");
         sender.sendMessage(MKOPManager.Prefix + ChatColor.AQUA + "作者: Mark_Chanel");
         sender.sendMessage(ChatColor.GOLD+"=============="+ChatColor.AQUA+"MK-OPManager 插件命令概述"+ChatColor.GOLD+"==============");
@@ -63,12 +63,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                     }
                     Player target = main.getServer().getPlayer(ss[1]);
                     Config.OPs.put(ss[1], false);
-
-                    main.getServer().getConsoleSender().sendMessage(String.valueOf(Config.OPs));
+                    Config.appendYamlConfig("Settings.TempWhiteList",ss[1]);
 
                     target.setOp(true);
                     target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "临时管理员" + ChatColor.GREEN + " 身份." + ChatColor.YELLOW + "时长: " + ss[3] + "日" + ss[4] + "时" + ss[5] + "分" + ss[6] + "秒");
-                    Config.updateConfig();
                     new BukkitRunnable() {
                         int tick = Integer.parseInt(ss[3]) * 24 * 3600 + Integer.parseInt(ss[4]) * 3600 + Integer.parseInt(ss[5]) * 60 + Integer.parseInt(ss[6]);
                         @Override
@@ -113,9 +111,7 @@ public class Commands implements CommandExecutor, TabCompleter {
                     Player target = main.getServer().getPlayer(ss[1]);
                     target.setOp(true);
                     Config.OPs.put(ss[1], true);
-
-                    Config.updateConfig();
-
+                    Config.appendYamlConfig("Settings.WhiteList",ss[1]);
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个管理员.");
                     target.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + sender.getName()  + "已赋予你 " + ChatColor.YELLOW + "管理员" + ChatColor.GREEN + " 身份.");
                     return true;
@@ -137,18 +133,22 @@ public class Commands implements CommandExecutor, TabCompleter {
                         return true;
                     }
                     int time = 0;
-                    String result = "";
+                    StringBuilder result = new StringBuilder();
                     for (String a : ss) {
-                        if (time != 0 && time != ss.length - 1) {
-                            result = a + "";
+                        if(time == 1){
+                            result = new StringBuilder(a);
+                        }
+                        if(time > 1 && time < ss.length-1){
+                            result.append(" ").append(a);
                         }
                         time++;
                     }
-                    if(Config.BannedCommands.contains(result)){
-                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "该命令已经禁止.");
+                    if(Config.BannedCommands.contains(result.toString())){
+                        sender.sendMessage(MKOPManager.Prefix + ChatColor.RED + "该命令已经禁止过.");
                         return true;
                     }
-                    Config.BannedCommands.add(result);
+                    Config.BannedCommands.add(result.toString());
+                    Config.appendYamlConfig("Settings.BannedCommands",result.toString());
                     sender.sendMessage(MKOPManager.Prefix + ChatColor.GREEN + "命令执行成功! 已加入了一个禁止命令.");
                     return true;
                 }
@@ -166,21 +166,10 @@ public class Commands implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                sendHelpPage(sender);
-                return true;
-
-            }else{
-                sendHelpPage(sender);
-                return true;
             }
+            sendHelpPage(sender);
+            return true;
         }
         return false;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] ss) {
-
-        return null;
-    }
-
 }

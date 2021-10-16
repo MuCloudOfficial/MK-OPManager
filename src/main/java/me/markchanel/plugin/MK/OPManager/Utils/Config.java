@@ -12,7 +12,7 @@ import java.util.*;
 public class Config {
 
     private final MKOPManager main;
-    public static final String Version = "BETA 000";
+    public static final String Version = "1.0.BETA.121";
     public static File ConfigFolder;
     public static File ConfigFile;
     public static File saveFile;
@@ -63,7 +63,7 @@ public class Config {
             FileConfiguration f = new YamlConfiguration();
             f.load(saveFile);
             SuperAdministrators = f.getStringList("Settings.SuperAdministrators");
-            BannedCommands = f.getStringList("Settings.BannedCommands");
+            BannedCommands.addAll(f.getStringList("Settings.BannedCommands"));
             for(String s : f.getStringList("Settings.WhiteList")){
                 OPs.put(s,true);
             }
@@ -95,31 +95,6 @@ public class Config {
         }
     }
 
-    public static void updateConfig(){
-        List<String> ops = new ArrayList<>();
-        List<String> tempOps = new ArrayList<>();
-
-        for(Map.Entry<String,Boolean> entry : OPs.entrySet()){
-            if(entry.getValue()){
-                ops.add(entry.getKey());
-            }else{
-                tempOps.add(entry.getKey());
-            }
-        }
-
-        FileConfiguration f = new YamlConfiguration();
-        try {
-            f.load(saveFile);
-            f.set("Settings.WhiteList",ops);
-            f.set("Settings.TempWhiteList",tempOps);
-            f.set("Settings.BannedCommands",BannedCommands);
-            f.save(saveFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void showConfig(){
         main.getServer().getConsoleSender().sendMessage(String.valueOf(SuperAdministrators));
         main.getServer().getConsoleSender().sendMessage(String.valueOf(OPs));
@@ -130,7 +105,6 @@ public class Config {
 
     public void reloadConfig(){
         checkIntegrity();
-        updateConfig();
         OPs.clear();
         SuperAdministrators.clear();
         BannedCommands.clear();
@@ -139,11 +113,21 @@ public class Config {
         loadConfig();
     }
 
+    public static void appendYamlConfig(String path,String value){
+        FileConfiguration fc = new YamlConfiguration();
+        try{
+            fc.load(ConfigFile);
+            fc.set(path,fc.getStringList(path).add(value));
+            fc.save(ConfigFile);
+        }catch (IOException | InvalidConfigurationException e){
+            e.printStackTrace();
+        }
+    }
+
     // 保存信息.
     public void saveConfig(){
         checkIntegrity();
         cancelALLTempOP();
-        updateConfig();
         OPs.clear();
         SuperAdministrators.clear();
         BannedCommands.clear();

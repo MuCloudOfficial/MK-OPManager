@@ -20,7 +20,6 @@ public class MKOPManager extends JavaPlugin {
         getServer().getConsoleSender().sendMessage(Prefix + ChatColor.AQUA + "正在加载 MK-OPManager...");
         c.startProcess();
         getCommand("mkopmanager").setExecutor(new Commands(this));
-        getCommand("mkopmanager").setTabCompleter(new Commands(this));
         getServer().getPluginManager().registerEvents(new CommandReciveListeners(),this);
         CheckServerPlayersTask = new CheckServerPlayers(this).runTaskTimer(this,0,Config.CheckInterval * 20L);
         getServer().getConsoleSender().sendMessage(Prefix + ChatColor.AQUA + "加载完毕!");

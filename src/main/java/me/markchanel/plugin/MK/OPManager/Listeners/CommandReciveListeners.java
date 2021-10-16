@@ -13,12 +13,6 @@ public class CommandReciveListeners implements Listener {
     @EventHandler
     public void CommandListen(PlayerCommandPreprocessEvent pcpe){
         Player target = pcpe.getPlayer();
-        if(target.isOp() &&
-                !Config.OPs.containsKey(target.getName()) &&
-                    !Config.SuperAdministrators.contains(target.getName())){
-            target.sendMessage(Messages.CommandDenied);
-            pcpe.setCancelled(true);
-        }
         for(String s : Config.BannedCommands){
             if(pcpe.getMessage().substring(1).toLowerCase().startsWith(s)){
                 if(!Config.SuperAdministrators.contains(pcpe.getPlayer().getName())){
