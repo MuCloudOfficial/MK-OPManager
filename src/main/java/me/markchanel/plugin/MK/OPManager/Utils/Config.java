@@ -1,6 +1,6 @@
 package me.markchanel.plugin.MK.OPManager.Utils;
 
-import me.markchanel.plugin.MK.OPManager.MKOPManager;
+import me.markchanel.plugin.MK.OPManager.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,8 +11,8 @@ import java.util.*;
 
 public class Config {
 
-    private final MKOPManager main;
-    public static final String Version = "1.0.BETA.121";
+    private final Main main;
+    public static String Version = null;
     public static File ConfigFolder;
     public static File ConfigFile;
     public static File saveFile;
@@ -22,19 +22,38 @@ public class Config {
     public static int CheckInterval;
     public static String Password;
 
-    public Config(MKOPManager plugin){
+    public Config(Main plugin){
         main = plugin;
         ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
         ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
         saveFile = new File(ConfigFolder + File.separator + "settings.yml");
     }
 
+    private void getVersion(){
+        try {
+            InputStream is = main.getClass().getClassLoader().getResourceAsStream("plugin.yml");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int length;
+            while((length = is.read(buf)) != -1){
+                baos.write(buf,0,length);
+            }
+            is.close();
+            baos.close();
+            LineNumberReader lnr = new LineNumberReader(new CharArrayReader(baos.toString("UTF-8").toCharArray()));
+            Version = ((String) lnr.lines().toArray()[3]).substring(9);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startProcess(){
+        getVersion();
         checkIntegrity();
         loadConfig();
     }
 
-    public void checkIntegrity(){
+    private void checkIntegrity(){
         if(!ConfigFile.getParentFile().exists()){
             ConfigFile.getParentFile().mkdir();
         }
@@ -58,7 +77,7 @@ public class Config {
         }
     }
 
-    public void loadConfig(){
+    private void loadConfig(){
         try {
             FileConfiguration f = new YamlConfiguration();
             f.load(saveFile);
@@ -75,32 +94,23 @@ public class Config {
             Password = f.getString("General.Password");
             Messages.setMessages();
             cancelALLTempOP();
-            showConfig();
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         } catch (NullPointerException npe){
             npe.printStackTrace();
             ConfigFile.renameTo(new File(ConfigFile.getParentFile().getAbsolutePath() + File.separator + "config.yml.old"));
             main.saveDefaultConfig();
-            main.getServer().getConsoleSender().sendMessage(MKOPManager.Prefix + ChatColor.RED + "Config文件错误! 请检查Config.yml");
+            main.getServer().getConsoleSender().sendMessage(Main.Prefix + ChatColor.RED + "Config文件错误! 请检查Config.yml");
         }
     }
 
-    public void cancelALLTempOP(){
+    private void cancelALLTempOP(){
         for(Map.Entry<String,Boolean> data : OPs.entrySet()){
             if(!data.getValue()){
                 main.getServer().getPlayer(data.getKey()).setOp(false);
                 OPs.remove(data.getKey(),data.getValue());
             }
         }
-    }
-
-    public void showConfig(){
-        main.getServer().getConsoleSender().sendMessage(String.valueOf(SuperAdministrators));
-        main.getServer().getConsoleSender().sendMessage(String.valueOf(OPs));
-        main.getServer().getConsoleSender().sendMessage(String.valueOf(BannedCommands));
-        main.getServer().getConsoleSender().sendMessage(String.valueOf(Password));
-        main.getServer().getConsoleSender().sendMessage(String.valueOf(CheckInterval));
     }
 
     public void reloadConfig(){

@@ -1,6 +1,8 @@
+#------------------------------------------------------------------------------
 name: MK-OPManager
-main: me.markchanel.plugin.MK.OPManager.MKOPManager
-version: 1.0.BETA.251
+main: me.markchanel.plugin.MK.OPManager.Main
+version: 1.0.1.Beta3
+#------------------------------------------------------------------------------
 api-version: 1.13
 author: Mark_Chanel
 website: https://gitee.com/markchanel/mk-opmanager
@@ -8,8 +10,7 @@ commands:
   mkopmanager:
     description: Main Command.
     usage: /mkopmanager
-    aliases:
-      - mkom
+    aliases: [mkom]
 
 permissions:
   mkopmanager.help:

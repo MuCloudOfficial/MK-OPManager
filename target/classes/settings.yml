@@ -1,0 +1,6 @@
+Settings:
+  SuperAdministrators: []
+  WhiteList: []
+  TempWhiteList: []
+  BannedCommands:
+    - nuke

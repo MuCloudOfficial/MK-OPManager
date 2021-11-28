@@ -1,6 +1,6 @@
 package me.markchanel.plugin.MK.OPManager.Tasks;
 
-import me.markchanel.plugin.MK.OPManager.MKOPManager;
+import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Utils.Config;
 import me.markchanel.plugin.MK.OPManager.Utils.Messages;
 import org.bukkit.entity.Player;
@@ -10,9 +10,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class CheckServerPlayers extends BukkitRunnable {
 
-    private final MKOPManager main;
+    private final Main main;
 
-    public CheckServerPlayers(MKOPManager plugin){
+    public CheckServerPlayers(Main plugin){
         main = plugin;
     }
 
@@ -22,7 +22,7 @@ public class CheckServerPlayers extends BukkitRunnable {
             if(target.isOp() &&
                     !Config.OPs.containsKey(target.getName()) &&
                         !Config.SuperAdministrators.contains(target.getName())){
-                target.sendMessage(Messages.OPDenied);
+                target.sendMessage(Messages.OPCheckDenied);
                 target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,1));
                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,40,1));
                 target.setOp(false);
