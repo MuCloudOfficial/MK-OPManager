@@ -2,14 +2,14 @@
 #
 #           MK-OPManager Plugin Configuration.
 #                             插件配置
-#                                         Author: Mark_Chanel
-#                                          作者
+#                                                                   Author: Mark_Chanel
+#                                                                    作者
 #
 #         请注意! 您在该文件上的任何错误操作都可能导致插件的运行错误! 对于由此原因造成的不可控后果请自行承担!
 #               (错误操作包括但不限于: 不遵照YAML语言标准写入设置,写入非法的设定值,写入一些超出插件功能的设置)
 #
 #         Please Attention!
-#               If you want to change the contents of this file, you need to know the YAML language syntax.
+#               If you want to change the contents of this file, you need to know the YAML language syntax and enter the values correctly .
 #               Any incorrect changes you make to this file could cause the plug-in to run abnormally.
 #
 #=======================================================================================================================
@@ -20,7 +20,6 @@ General:
   # 无密码格式限制,但不可为空!
   # 第一次启动建议更改该选项!
   Password: Mark_Chanel_Password
-
 
   # 检查间隔.
   # 插件会定时检查玩家中有无未被标记的 OP 并撤回 OP 身份.

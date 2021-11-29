@@ -1,4 +1,4 @@
-package me.markchanel.plugin.MK.OPManager.Utils;
+package me.markchanel.plugin.MK.OPManager.i18n;
 
 import com.sun.istack.internal.NotNull;
 import org.bukkit.ChatColor;

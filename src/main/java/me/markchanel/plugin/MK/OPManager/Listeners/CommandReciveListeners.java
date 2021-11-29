@@ -1,7 +1,7 @@
 package me.markchanel.plugin.MK.OPManager.Listeners;
 
 import me.markchanel.plugin.MK.OPManager.Utils.Config;
-import me.markchanel.plugin.MK.OPManager.Utils.Messages;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,7 @@ public class CommandReciveListeners implements Listener {
         for(String s : Config.BannedCommands){
             if(pcpe.getMessage().substring(1).toLowerCase().startsWith(s)){
                 if(!Config.SuperAdministrators.contains(pcpe.getPlayer().getName())){
-                    target.sendMessage(Messages.CommandDenied);
+                    target.sendMessage(Messages.CommandDenied.getMessage());
                     pcpe.setCancelled(true);
                 }
             }
@@ -30,7 +30,7 @@ public class CommandReciveListeners implements Listener {
         if (pcpe.getMessage().substring(1).toLowerCase().startsWith("op")){
             if (!Config.SuperAdministrators.contains(target.getName())){
                 pcpe.setCancelled(true);
-                target.sendMessage(Messages.OPDenied);
+                target.sendMessage(Messages.OPDenied.getMessage());
             }
         }
     }

@@ -3,9 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/MK_OPManager_jar</output-path>
     <root id="archive" name="MK-OPManager.jar">
       <element id="module-output" name="MK-OPManager" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/config.yml" />
+      <element id="directory" name="resources">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/config.yml" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/settings.yml" />
+      </element>
       <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/plugin.yml" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/settings.yml" />
     </root>
   </artifact>
 </component>

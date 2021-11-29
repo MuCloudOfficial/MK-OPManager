@@ -1,7 +1,7 @@
 package me.markchanel.plugin.MK.OPManager.Utils;
 
 import me.markchanel.plugin.MK.OPManager.Main;
-import org.bukkit.ChatColor;
+import me.markchanel.plugin.MK.OPManager.i18n.i18nManager;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,7 +15,7 @@ public class Config {
     public static String Version = null;
     public static File ConfigFolder;
     public static File ConfigFile;
-    public static File saveFile;
+    public static File SettingsFile;
     public static List<String> SuperAdministrators = new ArrayList<>();
     public static List<String> BannedCommands = new ArrayList<>();
     public static Map<String, Boolean> OPs = new HashMap<>();
@@ -26,10 +26,10 @@ public class Config {
         main = plugin;
         ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
         ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
-        saveFile = new File(ConfigFolder + File.separator + "settings.yml");
+        SettingsFile = new File(ConfigFolder + File.separator + "settings.yml");
     }
 
-    private void getVersion(){
+    private void loadVersion(){
         try {
             InputStream is = main.getClass().getClassLoader().getResourceAsStream("plugin.yml");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -47,100 +47,69 @@ public class Config {
         }
     }
 
-    public void startProcess(){
-        getVersion();
+    private void startProcess(){
+        loadVersion();
         checkIntegrity();
+        loadMessages();
         loadConfig();
     }
 
     private void checkIntegrity(){
-        if(!ConfigFile.getParentFile().exists()){
-            ConfigFile.getParentFile().mkdir();
-        }
-        if(!ConfigFile.exists()){
-            main.saveDefaultConfig();
-        }
-        if(!saveFile.exists()){
-            try {
-                saveFile.createNewFile();
-
-                try (InputStream is = this.getClass().getClassLoader().getResourceAsStream("settings.yml"); OutputStream os = new FileOutputStream(saveFile.getAbsolutePath())) {
-                    byte[] buf = new byte[1024];
-                    int temp;
-                    while ((temp = is.read(buf)) > 0) {
-                        os.write(buf, 0, temp);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (!ConfigFolder.exists()){
+                ConfigFolder.mkdir();
             }
+            if (!ConfigFile.exists()) {
+                main.saveDefaultConfig();
+            }
+            if (!SettingsFile.exists()) {
+                SettingsFile.createNewFile();
+                InputStream is = main.getClass().getClassLoader().getResourceAsStream("resources\\settings.yml");
+                OutputStream os = new FileOutputStream(SettingsFile.getAbsolutePath());
+                byte[] buf = new byte[1024];
+                int temp;
+                while((temp = is.read(buf)) > 0){
+                    os.write(buf,0,temp);
+                }
+                is.close();
+                os.close();
+            }
+        }catch (IOException ioe){
+            ioe.printStackTrace();
         }
+    }
+
+    private void loadMessages(){
+        i18nManager im = new i18nManager();
+        im.loadMessages();
     }
 
     private void loadConfig(){
+        FileConfiguration fc = new YamlConfiguration();
         try {
-            FileConfiguration f = new YamlConfiguration();
-            f.load(saveFile);
-            SuperAdministrators = f.getStringList("Settings.SuperAdministrators");
-            BannedCommands.addAll(f.getStringList("Settings.BannedCommands"));
-            for(String s : f.getStringList("Settings.WhiteList")){
-                OPs.put(s,true);
+            fc.load(ConfigFile);
+            if (fc.get("General.Password") == null) {
+                main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l未定义密码,已恢复至初始密码");
+                fc.set("General.Password","Mark_Chanel_Password");
+                fc.save(ConfigFile);
             }
-            for(String s : f.getStringList("Settings.TempWhiteList")){
-                OPs.put(s,false);
+            Password = fc.getString("General.Password");
+
+            if (fc.get("General.CheckInterval") == null) {
+                main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l未定义检测时间,已恢复至初始状态");
+                fc.set("General.CheckInterval", 1);
+                fc.save(ConfigFile);
             }
-            f.load(ConfigFile);
-            CheckInterval = f.getInt("General.CheckInterval");
-            Password = f.getString("General.Password");
-            Messages.setMessages();
-            cancelALLTempOP();
+            CheckInterval = fc.getInt("General.CheckInterval");
+
+            fc.load(SettingsFile);
+
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-        } catch (NullPointerException npe){
-            npe.printStackTrace();
-            ConfigFile.renameTo(new File(ConfigFile.getParentFile().getAbsolutePath() + File.separator + "config.yml.old"));
-            main.saveDefaultConfig();
-            main.getServer().getConsoleSender().sendMessage(Main.Prefix + ChatColor.RED + "Config文件错误! 请检查Config.yml");
         }
     }
 
-    private void cancelALLTempOP(){
-        for(Map.Entry<String,Boolean> data : OPs.entrySet()){
-            if(!data.getValue()){
-                main.getServer().getPlayer(data.getKey()).setOp(false);
-                OPs.remove(data.getKey(),data.getValue());
-            }
-        }
-    }
+    private void disableAllTempOP(){
 
-    public void reloadConfig(){
-        checkIntegrity();
-        OPs.clear();
-        SuperAdministrators.clear();
-        BannedCommands.clear();
-        Password = null;
-        CheckInterval = 0;
-        loadConfig();
-    }
-
-    public static void appendYamlConfig(String path,String value){
-        FileConfiguration fc = new YamlConfiguration();
-        try{
-            fc.load(ConfigFile);
-            fc.set(path,fc.getStringList(path).add(value));
-            fc.save(ConfigFile);
-        }catch (IOException | InvalidConfigurationException e){
-            e.printStackTrace();
-        }
-    }
-
-    // 保存信息.
-    public void saveConfig(){
-        checkIntegrity();
-        cancelALLTempOP();
-        OPs.clear();
-        SuperAdministrators.clear();
-        BannedCommands.clear();
-        Password = null;
     }
 }
