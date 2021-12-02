@@ -22,23 +22,23 @@ public class addOP{
 
     public void run() {
         String password = Args.get(Args.size() - 1);
-        if (!password.equals(Config.Password)) {
+        if (!password.equals(Config.getPassword())) {
             Sender.sendMessage(Main.Prefix + "§c§l密码错误");
             return;
         }
         Player targetP = Bukkit.getPlayer(Args.get(1));
-        if(Config.OPs.containsKey(targetP.getName()) ||
-                Config.SuperAdministrators.contains(targetP.getName())){
+        if(Config.getOPs().containsKey(targetP.getName()) ||
+                Config.getSuperAdministrators().contains(targetP.getName())){
             Sender.sendMessage(Main.Prefix + "§c§l该玩家已是管理员");
             return;
         }
         targetP.sendMessage("§e你已被 " + Sender.getName() + " 授予了管理员.");
-        Config.OPs.put(targetP.getName(), true);
+        Config.getOPs().put(targetP.getName(), true);
     }
 
     public void start() {
         if(!(Sender instanceof ConsoleCommandSender) ||
-                !Config.SuperAdministrators.contains(Sender.getName()) ||
+                !Config.getSuperAdministrators().contains(Sender.getName()) ||
                 !Sender.hasPermission("mkopmanager.admin")){
             Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
             return;

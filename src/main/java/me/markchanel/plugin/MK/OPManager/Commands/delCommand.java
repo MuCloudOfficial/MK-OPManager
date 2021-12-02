@@ -21,24 +21,24 @@ public class delCommand{
     public void run() {
         StringBuilder target = new StringBuilder();
         String password = Args.get(Args.size() - 1);
-        if(password.equals(Config.Password)){
+        if(password.equals(Config.getPassword())){
             Sender.sendMessage(Main.Prefix + "§c§l密码错误");
             return;
         }
         for(String s :Args.subList(1,Args.size() - 2)){
             target.append(s).append(" ");
         }
-        if(!Config.BannedCommands.contains(target.toString())){
+        if(!Config.getBannedCommands().contains(target.toString())){
             Sender.sendMessage(Main.Prefix + "§c§l该命令没有被禁止");
             return;
         }
-        Config.BannedCommands.remove(target.toString());
+        Config.getBannedCommands().remove(target.toString());
         Sender.sendMessage(Main.Prefix + "§a已清除一个禁止命令");
     }
 
     public void start() {
         if(!(Sender instanceof ConsoleCommandSender) ||
-                !Config.SuperAdministrators.contains(Sender.getName()) ||
+                !Config.getBannedCommands().contains(Sender.getName()) ||
                 !Sender.hasPermission("mkopmanager.admin")){
             Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
             return;

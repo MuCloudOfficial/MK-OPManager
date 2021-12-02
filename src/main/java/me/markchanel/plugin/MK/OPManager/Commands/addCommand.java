@@ -20,7 +20,7 @@ public class addCommand{
 
     public void run() {
         String password = Args.get(Args.size() - 1);
-        if (!password.equals(Config.Password)) {
+        if (!password.equals(Config.getPassword())) {
             Sender.sendMessage(Main.Prefix + "§c§l密码错误");
             return;
         }
@@ -28,17 +28,17 @@ public class addCommand{
         for(String s : Args.subList(1,Args.size() - 2)){
             target.append(s).append(" ");
         }
-        if(Config.BannedCommands.contains(target.toString())){
+        if(Config.getBannedCommands().contains(target.toString())){
             Sender.sendMessage(Main.Prefix + "§4§l该命令已被禁止");
             return;
         }
-        Config.BannedCommands.add(target.toString());
+        Config.getBannedCommands().add(target.toString());
         Sender.sendMessage(Main.Prefix + "§a你已添加了一项禁止命令");
     }
 
     public void start() {
         if(!(Sender instanceof ConsoleCommandSender) ||
-                !Config.SuperAdministrators.contains(Sender.getName()) ||
+                !Config.getSuperAdministrators().contains(Sender.getName()) ||
                 !Sender.hasPermission("mkopmanager.admin")){
             Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
             return;

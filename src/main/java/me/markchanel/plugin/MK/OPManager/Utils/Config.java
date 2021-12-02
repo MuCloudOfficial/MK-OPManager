@@ -12,15 +12,15 @@ import java.util.*;
 public class Config {
 
     private final Main main;
-    public static String Version = null;
-    public static File ConfigFolder;
-    public static File ConfigFile;
-    public static File SettingsFile;
-    public static List<String> SuperAdministrators = new ArrayList<>();
-    public static List<String> BannedCommands = new ArrayList<>();
-    public static Map<String, Boolean> OPs = new HashMap<>();
-    public static int CheckInterval;
-    public static String Password;
+    private static String Version = null;
+    private static File ConfigFolder;
+    private static File ConfigFile;
+    private static File SettingsFile;
+    private static List<String> SuperAdministrators = new ArrayList<>();
+    private static List<String> BannedCommands = new ArrayList<>();
+    private static Map<String, Boolean> OPs = new HashMap<>();
+    private static int CheckInterval;
+    private static String Password;
 
     public Config(Main plugin){
         main = plugin;
@@ -84,13 +84,13 @@ public class Config {
         im.loadMessages();
     }
 
-    private void loadConfig(){
+    private void loadConfig() {
         FileConfiguration fc = new YamlConfiguration();
         try {
             fc.load(ConfigFile);
             if (fc.get("General.Password") == null) {
                 main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l未定义密码,已恢复至初始密码");
-                fc.set("General.Password","Mark_Chanel_Password");
+                fc.set("General.Password", "Mark_Chanel_Password");
                 fc.save(ConfigFile);
             }
             Password = fc.getString("General.Password");
@@ -109,7 +109,43 @@ public class Config {
         }
     }
 
+    public static String getVersion() {
+        return Version;
+    }
+
+    public static File getConfigFolder() {
+        return ConfigFolder;
+    }
+
+    public static File getConfigFile() {
+        return ConfigFile;
+    }
+
+    public static File getSettingsFile() {
+        return SettingsFile;
+    }
+
+    public static List<String> getBannedCommands() {
+        return BannedCommands;
+    }
+
+    public static Map<String, Boolean> getOPs() {
+        return OPs;
+    }
+
+    public static int getCheckInterval() {
+        return CheckInterval;
+    }
+
+    public static String getPassword() {
+        return Password;
+    }
+
     private void disableAllTempOP(){
 
+    }
+
+    public static List<String> getSuperAdministrators(){
+        return SuperAdministrators;
     }
 }
