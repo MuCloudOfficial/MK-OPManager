@@ -1,7 +1,7 @@
 package me.markchanel.plugin.MK.OPManager.Commands;
 
 import me.markchanel.plugin.MK.OPManager.Main;
-import me.markchanel.plugin.MK.OPManager.Utils.Config;
+import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -21,7 +21,7 @@ public class reload {
 
     public void start(){
         if(!(Sender instanceof ConsoleCommandSender) ||
-                !Config.getSuperAdministrators().contains(Sender.getName()) ||
+                !CentralController.getSuperAdministrators().contains(Sender.getName()) ||
                 !Sender.hasPermission("mkopmanager.admin")){
             Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
             return;

@@ -1,7 +1,7 @@
 package me.markchanel.plugin.MK.OPManager.Commands;
 
 import me.markchanel.plugin.MK.OPManager.Main;
-import me.markchanel.plugin.MK.OPManager.Utils.Config;
+import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -23,16 +23,16 @@ public class delOP{
     public void run() {
         String targetName = Args.get(1);
         String password = Args.get(Args.size() - 1);
-        if(password.equals(Config.getPassword())){
+        if(password.equals(CentralController.getPassword())){
             Sender.sendMessage(Main.Prefix + "§c§l密码错误");
             return;
         }
         Player targetP = Bukkit.getPlayer(targetName);
-        if(!Config.getOPs().containsKey(targetName)){
+        if(!CentralController.getOPs().containsKey(targetName)){
             Sender.sendMessage(Main.Prefix + "§c§l该玩家不在管理员名单中.");
             return;
         }
-        Config.getOPs().remove(targetName);
+        CentralController.getOPs().remove(targetName);
         targetP.sendMessage("§e你的管理员身份已被 " + Sender.getName() + " 取消");
         targetP.setOp(false);
         Sender.sendMessage(Main.Prefix + "§a已移除了一个管理员");
@@ -41,7 +41,7 @@ public class delOP{
 
     public void start() {
         if(!(Sender instanceof ConsoleCommandSender) ||
-                !Config.getSuperAdministrators().contains(Sender.getName()) ||
+                !CentralController.getSuperAdministrators().contains(Sender.getName()) ||
                 !Sender.hasPermission("mkopmanager.admin")){
             Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
             return;

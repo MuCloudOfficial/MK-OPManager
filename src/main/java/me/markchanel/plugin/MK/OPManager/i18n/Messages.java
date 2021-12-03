@@ -21,4 +21,8 @@ public enum Messages {
     public String getMessage() {
         return message;
     }
+
+    public void clear(){
+        message = "Messages." + name() + ".Lost";
+    }
 }

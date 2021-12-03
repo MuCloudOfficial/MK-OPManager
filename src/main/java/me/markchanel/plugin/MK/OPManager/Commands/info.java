@@ -1,6 +1,6 @@
 package me.markchanel.plugin.MK.OPManager.Commands;
 
-import me.markchanel.plugin.MK.OPManager.Utils.Config;
+import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
 import org.bukkit.command.CommandSender;
 
 public class info{
@@ -12,7 +12,7 @@ public class info{
     }
 
     public void run(){
-        Sender.sendMessage("§7§l| §b§lMK§7§l-§e§lOPManager  " + "§6§lVer §b§l" + Config.getVersion());
+        Sender.sendMessage("§7§l| §b§lMK§7§l-§e§lOPManager  " + "§6§lVer §b§l" + CentralController.getVersion());
         Sender.sendMessage("§7§l| §6作者: §7§lMark_Chanel");
         Sender.sendMessage("§7§l| §6插件主页: §b https://gitee.com/markchanel/mk-opmanager");
         Sender.sendMessage("§7§l| §7§m----------------------§b§l命令概述§7§m---------------------------");

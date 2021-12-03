@@ -9,9 +9,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.*;
 import java.util.*;
 
-public class Config {
+public class CentralController {
 
     private final Main main;
+    private i18nManager im = new i18nManager();
     private static String Version = null;
     private static File ConfigFolder;
     private static File ConfigFile;
@@ -22,7 +23,7 @@ public class Config {
     private static int CheckInterval;
     private static String Password;
 
-    public Config(Main plugin){
+    public CentralController(Main plugin){
         main = plugin;
         ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
         ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
@@ -47,7 +48,7 @@ public class Config {
         }
     }
 
-    private void startProcess(){
+    public void startPlugin(){
         loadVersion();
         checkIntegrity();
         loadMessages();
@@ -80,7 +81,6 @@ public class Config {
     }
 
     private void loadMessages(){
-        i18nManager im = new i18nManager();
         im.loadMessages();
     }
 
@@ -103,10 +103,41 @@ public class Config {
             CheckInterval = fc.getInt("General.CheckInterval");
 
             fc.load(SettingsFile);
-
+            if(fc.get("Settings.SuperAdministrator") != null){
+                SuperAdministrators = fc.getStringList("Settings.SuperAdministrator");
+            }
+            if(fc.get("Settings.BannedCommands") != null){
+                BannedCommands = fc.getStringList("Settings.BannedCommands");
+            }
+            if(fc.get("Settings.WhiteList") != null){
+                for(String s : fc.getStringList("Settings.WhiteList")){
+                    OPs.put(s,true);
+                }
+            }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reloadPlugin(){
+        Password = null;
+        CheckInterval = 0;
+        OPs.clear();
+        BannedCommands.clear();
+        SuperAdministrators.clear();
+        checkIntegrity();
+        im.clearMessages();
+        im.setLocale();
+        im.loadMessages();
+    }
+
+    public void disablePlugin(){
+        Password = null;
+        CheckInterval = 0;
+        OPs.clear();
+        BannedCommands.clear();
+        SuperAdministrators.clear();
+        im.clearMessages();
     }
 
     public static String getVersion() {
@@ -148,4 +179,6 @@ public class Config {
     public static List<String> getSuperAdministrators(){
         return SuperAdministrators;
     }
+
+
 }

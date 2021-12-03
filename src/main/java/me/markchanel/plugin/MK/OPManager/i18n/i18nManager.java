@@ -1,7 +1,7 @@
 package me.markchanel.plugin.MK.OPManager.i18n;
 
 import me.markchanel.plugin.MK.OPManager.Main;
-import me.markchanel.plugin.MK.OPManager.Utils.Config;
+import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,10 +26,10 @@ public class i18nManager{
         setLocale();
     }
 
-    private void setLocale(){
+    public void setLocale(){
         try{
             FileConfiguration fc = new YamlConfiguration();
-            fc.load(Config.getConfigFile());
+            fc.load(CentralController.getConfigFile());
             if(fc.get("General.Locale") == null || !availableLocales.contains(fc.getString("General.Locale"))){
                 Bukkit.getServer().getConsoleSender().sendMessage(Main.Prefix + "§4§lLoad Error: Locale.  Will set en_US");
                 Locale = availableLocales.get(1);
@@ -40,7 +40,7 @@ public class i18nManager{
     }
 
     private void readFile(){
-        MessageFile = new File(Config.getConfigFile().getAbsoluteFile() + File.separator + "messages.yml");
+        MessageFile = new File(CentralController.getConfigFile().getAbsoluteFile() + File.separator + "messages.yml");
         try {
             if(!MessageFile.exists()){
                 MessageFile.createNewFile();
@@ -70,6 +70,13 @@ public class i18nManager{
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearMessages(){
+        Messages.CommandDenied.clear();
+        Messages.OPDenied.clear();
+        Messages.OPCheckDenied.clear();
+        Messages.OPTimeOut.clear();
     }
 
 }
