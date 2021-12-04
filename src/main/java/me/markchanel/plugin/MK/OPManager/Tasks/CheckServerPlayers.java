@@ -9,12 +9,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class CheckServerPlayers extends BukkitRunnable {
 
     private final Main main;
+    private final CentralController cc;
 
     public CheckServerPlayers(Main plugin){
         main = plugin;
+        cc = new CentralController();
     }
 
     @Override
@@ -29,6 +33,18 @@ public class CheckServerPlayers extends BukkitRunnable {
                 target.setOp(false);
                 if(target.getGameMode() == GameMode.CREATIVE){
                     target.setGameMode(GameMode.SURVIVAL);
+                }
+                if(cc.getEssentialsLoaded()){
+                    try {
+                        Object EssInstance = cc.getEssentialsClass().getConstructor().newInstance();
+                        Object userDataInstance = cc.getEssentialsUser().getConstructor(Player.class,cc.getEssentialsConfigClass()).newInstance(target,EssInstance);
+                        Boolean isGodMode = (Boolean) cc.getEssentialsUser().getMethod("isGodModeEnabled").invoke(userDataInstance);
+                        if(isGodMode){
+                            cc.getEssentialsUser().getMethod("setGodModeEnabled", Boolean.class).invoke(userDataInstance,false);
+                        }
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

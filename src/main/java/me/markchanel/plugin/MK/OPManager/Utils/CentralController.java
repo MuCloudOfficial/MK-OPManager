@@ -1,33 +1,66 @@
 package me.markchanel.plugin.MK.OPManager.Utils;
 
+import com.earth2me.essentials.User;
+import me.markchanel.plugin.MK.OPManager.Commands.CommandProcessor;
+import me.markchanel.plugin.MK.OPManager.Listeners.CommandReciveListeners;
+import me.markchanel.plugin.MK.OPManager.Listeners.OPListener;
 import me.markchanel.plugin.MK.OPManager.Main;
+import me.markchanel.plugin.MK.OPManager.Tasks.CheckServerPlayers;
 import me.markchanel.plugin.MK.OPManager.i18n.i18nManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
+import org.bukkit.scheduler.BukkitTask;
+
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.IEssentials;
 
 import java.io.*;
 import java.util.*;
 
 public class CentralController {
 
-    private final Main main;
+    private Main main;
     private i18nManager im = new i18nManager();
     private static String Version = null;
+
     private static File ConfigFolder;
     private static File ConfigFile;
     private static File SettingsFile;
+
     private static List<String> SuperAdministrators = new ArrayList<>();
     private static List<String> BannedCommands = new ArrayList<>();
     private static Map<String, Boolean> OPs = new HashMap<>();
     private static int CheckInterval;
     private static String Password;
 
+    private boolean EssentialLoaded = false;
+    private Class<?> EssentialsClass;
+    private Class<?> EssentialsConfigClass;
+    private Class<?> EssentialsUserClass;
+
+    private BukkitTask Task;
+
     public CentralController(Main plugin){
         main = plugin;
         ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
         ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
         SettingsFile = new File(ConfigFolder + File.separator + "settings.yml");
+    }
+
+    public CentralController(){}
+
+    public void startPlugin(){
+        loadVersion();
+        checkIntegrity();
+        loadConfig();
+        loadMessages();
+        loadCommand();
+        loadListeners();
+        launchTask();
+        EssentialsHook();
     }
 
     private void loadVersion(){
@@ -48,11 +81,14 @@ public class CentralController {
         }
     }
 
-    public void startPlugin(){
-        loadVersion();
-        checkIntegrity();
-        loadMessages();
-        loadConfig();
+    private void EssentialsHook(){
+        if(main.getServer().getPluginManager().isPluginEnabled("Essentials")){
+            main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l已侦测到 Essentials");
+            EssentialLoaded = true;
+            EssentialsClass = Essentials.class;
+            EssentialsConfigClass = IEssentials.class;
+            EssentialsUserClass = User.class;
+        }
     }
 
     private void checkIntegrity(){
@@ -119,25 +155,85 @@ public class CentralController {
         }
     }
 
+    private void launchTask(){
+        Task = new CheckServerPlayers(main).runTaskTimer(main,0,CheckInterval *20L);
+    }
+
+    private void interruptTask(){
+        Task.cancel();
+        Task = null;
+    }
+
+    private void loadCommand(){
+        Objects.requireNonNull(main.getServer().getPluginCommand("mkopmanager")).setExecutor(new CommandProcessor(main));
+    }
+
+    private void loadListeners(){
+        Bukkit.getServer().getPluginManager().registerEvents(new CommandReciveListeners(),main);
+        Bukkit.getServer().getPluginManager().registerEvents(new OPListener(main),main);
+    }
+
+    private void unloadListeners(){
+        HandlerList.unregisterAll(main);
+    }
+
     public void reloadPlugin(){
         Password = null;
         CheckInterval = 0;
+        disableAllTempOP();
         OPs.clear();
         BannedCommands.clear();
         SuperAdministrators.clear();
-        checkIntegrity();
         im.clearMessages();
+        interruptTask();
+        unloadListeners();
+
+        EssentialLoaded = false;
+        EssentialsUserClass = null;
+        EssentialsConfigClass = null;
+
+        checkIntegrity();
+        EssentialsHook();
+        loadConfig();
         im.setLocale();
         im.loadMessages();
+        loadListeners();
+        launchTask();
+    }
+
+    private void disableAllTempOP(){
+        for(Map.Entry<String,Boolean> entry : OPs.entrySet()){
+            if(!entry.getValue()){
+                main.getServer().getPlayer(entry.getKey()).setOp(false);
+            }
+        }
     }
 
     public void disablePlugin(){
         Password = null;
         CheckInterval = 0;
+        disableAllTempOP();
         OPs.clear();
         BannedCommands.clear();
         SuperAdministrators.clear();
         im.clearMessages();
+        EssentialLoaded = false;
+        EssentialsUserClass = null;
+        EssentialsConfigClass = null;
+        interruptTask();
+        unloadListeners();
+    }
+
+    public Class<?> getEssentialsUser(){
+        return EssentialsUserClass;
+    }
+
+    public Class<?> getEssentialsClass(){
+        return EssentialsClass;
+    }
+
+    public Class<?> getEssentialsConfigClass(){
+        return EssentialsConfigClass;
     }
 
     public static String getVersion() {
@@ -172,13 +268,12 @@ public class CentralController {
         return Password;
     }
 
-    private void disableAllTempOP(){
-
-    }
-
     public static List<String> getSuperAdministrators(){
         return SuperAdministrators;
     }
 
+    public Boolean getEssentialsLoaded(){
+        return EssentialLoaded;
+    }
 
 }

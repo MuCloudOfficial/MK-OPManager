@@ -11,7 +11,7 @@ public class CommandReciveListeners implements Listener {
 
     // 检测玩家发出的命令
     @EventHandler
-    public void CommandListen(PlayerCommandPreprocessEvent pcpe){
+    public void Listener(PlayerCommandPreprocessEvent pcpe){
         Player target = pcpe.getPlayer();
         for(String s : CentralController.getBannedCommands()){
             if(pcpe.getMessage().substring(1).toLowerCase().startsWith(s)){
@@ -22,17 +22,4 @@ public class CommandReciveListeners implements Listener {
             }
         }
     }
-
-    // 检测玩家使用 /op 命令
-    @EventHandler
-    public void OPListener(PlayerCommandPreprocessEvent pcpe){
-        Player target = pcpe.getPlayer();
-        if (pcpe.getMessage().substring(1).toLowerCase().startsWith("op")){
-            if (!CentralController.getBannedCommands().contains(target.getName())){
-                pcpe.setCancelled(true);
-                target.sendMessage(Messages.OPDenied.getMessage());
-            }
-        }
-    }
-
 }
