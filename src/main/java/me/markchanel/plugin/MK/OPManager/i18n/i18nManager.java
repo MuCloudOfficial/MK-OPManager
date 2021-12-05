@@ -15,15 +15,16 @@ import java.util.Objects;
 public class i18nManager{
 
     private final List<String> availableLocales = new ArrayList<>();
-    private String Locale = null;
+    private static String Locale = null;
     private File MessageFile;
 
-    public i18nManager(){
+    public i18nManager() {
         availableLocales.add("zh_CN");
         availableLocales.add("en_US");
         availableLocales.add("zh_TW");
         readFile();
         setLocale();
+        Bukkit.getServer().getConsoleSender().sendMessage("§b§lLocale §e§l" + Locale);
     }
 
     public void setLocale(){
@@ -63,20 +64,22 @@ public class i18nManager{
         try {
             FileConfiguration f = new YamlConfiguration();
             f.load(MessageFile);
-            Messages.CommandDenied.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + ".CommandDenied"))));
-            Messages.OPDenied.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + ".OPDenied"))));
-            Messages.OPTimeOut.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + ".OPTimeOut"))));
-            Messages.OPCheckDenied.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + ".OPCheckDenied"))));
+            for(Messages m : Messages.values()){
+                m.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + m.name()))));
+            }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
 
+    public static String getLocale(){
+        return Locale;
+    }
+
     public void clearMessages(){
-        Messages.CommandDenied.clear();
-        Messages.OPDenied.clear();
-        Messages.OPCheckDenied.clear();
-        Messages.OPTimeOut.clear();
+        for(Messages m : Messages.values()){
+            m.clear();
+        }
     }
 
 }

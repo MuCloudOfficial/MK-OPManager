@@ -2,6 +2,8 @@ package me.markchanel.plugin.MK.OPManager.Commands;
 
 import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
+import me.markchanel.plugin.MK.OPManager.i18n.StringConvert;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -24,26 +26,26 @@ public class delOP{
         String targetName = Args.get(1);
         String password = Args.get(Args.size() - 1);
         if(password.equals(CentralController.getPassword())){
-            Sender.sendMessage(Main.Prefix + "§c§l密码错误");
+            Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());
             return;
         }
         Player targetP = Bukkit.getPlayer(targetName);
         if(!CentralController.getOPs().containsKey(targetName)){
-            Sender.sendMessage(Main.Prefix + "§c§l该玩家不在管理员名单中.");
+            Sender.sendMessage(Main.Prefix + Messages.NotOperator.getMessage());
             return;
         }
         CentralController.getOPs().remove(targetName);
-        targetP.sendMessage("§e你的管理员身份已被 " + Sender.getName() + " 取消");
+        Sender.sendMessage(Main.Prefix + Messages.RemoveOperator);
         targetP.setOp(false);
-        Sender.sendMessage(Main.Prefix + "§a已移除了一个管理员");
+        targetP.sendMessage(StringConvert.convert(Messages.RemoveOperatorForPlayer.getMessage(),"{player}",Sender.getName()));
     }
 
 
     public void start() {
-        if(!(Sender instanceof ConsoleCommandSender) ||
-                !CentralController.getSuperAdministrators().contains(Sender.getName()) ||
+        if(!(Sender instanceof ConsoleCommandSender) &&
+                !CentralController.getSuperAdministrators().contains(Sender.getName()) &&
                 !Sender.hasPermission("mkopmanager.admin")){
-            Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
+            Sender.sendMessage(Main.Prefix + Messages.PermissionDenied.getMessage());
             return;
         }
         run();

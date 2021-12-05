@@ -2,6 +2,7 @@ package me.markchanel.plugin.MK.OPManager.Commands;
 
 import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -22,25 +23,25 @@ public class delCommand{
         StringBuilder target = new StringBuilder();
         String password = Args.get(Args.size() - 1);
         if(password.equals(CentralController.getPassword())){
-            Sender.sendMessage(Main.Prefix + "§c§l密码错误");
+            Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());
             return;
         }
         for(String s :Args.subList(1,Args.size() - 2)){
             target.append(s).append(" ");
         }
         if(!CentralController.getBannedCommands().contains(target.toString())){
-            Sender.sendMessage(Main.Prefix + "§c§l该命令没有被禁止");
+            Sender.sendMessage(Main.Prefix + Messages.NotBannedCommand.getMessage());
             return;
         }
         CentralController.getBannedCommands().remove(target.toString());
-        Sender.sendMessage(Main.Prefix + "§a已清除一个禁止命令");
+        Sender.sendMessage(Main.Prefix + Messages.RemoveBannedCommand.getMessage());
     }
 
     public void start() {
-        if(!(Sender instanceof ConsoleCommandSender) ||
-                !CentralController.getBannedCommands().contains(Sender.getName()) ||
+        if(!(Sender instanceof ConsoleCommandSender) &&
+                !CentralController.getSuperAdministrators().contains(Sender.getName()) &&
                 !Sender.hasPermission("mkopmanager.admin")){
-            Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
+            Sender.sendMessage(Main.Prefix + Messages.PermissionDenied.getMessage());
             return;
         }
         run();

@@ -1,6 +1,8 @@
 package me.markchanel.plugin.MK.OPManager;
 
 import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
+import me.markchanel.plugin.MK.OPManager.i18n.i18nManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -9,21 +11,23 @@ public class Main extends JavaPlugin {
     private final CentralController c = new CentralController(this);
 
     @Override
+    // TODO
     public void onEnable() {
-        getServer().getConsoleSender().sendMessage(Prefix + "§b§l正在加载 MK-OPManager...");
+        new i18nManager().loadMessages();
+        getServer().getConsoleSender().sendMessage(Prefix + Messages.EnablingPlugin.getMessage());
         c.startPlugin();
-        getServer().getConsoleSender().sendMessage(Prefix + "§b§l加载完毕!");
+        getServer().getConsoleSender().sendMessage(Prefix + Messages.EnabledPlugin.getMessage());
     }
 
     @Override
     public void onDisable(){
-        getServer().getConsoleSender().sendMessage(Prefix +  "§b§l正在关闭 MK-OPManager...");
+        getServer().getConsoleSender().sendMessage(Prefix +  Messages.DisablingPlugin.getMessage());
         c.disablePlugin();
-        getServer().getConsoleSender().sendMessage(Prefix + "§b§l卸载完毕!");
+        getServer().getConsoleSender().sendMessage(Prefix + Messages.DisabledPlugin.getMessage());
     }
 
     public void onReload(){
         c.reloadPlugin();
-        getServer().getConsoleSender().sendMessage(Prefix + "§b§l重载完毕");
+        getServer().getConsoleSender().sendMessage(Prefix + Messages.ReloadedPlugin.getMessage());
     }
 }

@@ -40,8 +40,12 @@ public class CommandProcessor implements CommandExecutor {
                 new delCommand(sender,ss).start();
                 return true;
             }
+            if(subCommand.equalsIgnoreCase("listOP")){
+                new listOP(sender).start();
+                return true;
+            }
             if(subCommand.equalsIgnoreCase("reload")){
-                main.onReload();
+               new reload(sender,main).start();
                 return true;
             }
         }

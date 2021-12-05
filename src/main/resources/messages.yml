@@ -1,0 +1,62 @@
+#==========================================================
+#
+#                 MK-OPManager      语言文件
+#                                               LanguageFile
+#                                       Author: Mark_Chanel
+#                欢迎联系我指出翻译错误
+#==========================================================
+
+# 设置自定义语言.
+#  Custom Language Settings.
+Messages:
+  zh_CN:
+    EnablingPlugin: "&b&l正在加载 MK-OPManager..."
+    EnabledPlugin: "&b&l加载完毕!"
+    DisablingPlugin: "&b&l正在关闭 MK-OPManager..."
+    DisabledPlugin: "&b&l卸载完毕!"
+    NotDefinedPassword: "&6未定义密码,已恢复至初始值"
+    NotDefineInterval: "&6未定义检测间隔,已恢复至初始值"
+    CommandDenied: "&4你没有权限执行此命令!"
+    OPDenied: "&4你未拥有超级管理员身份. &c操作被拒绝."
+    OPCheckDenied: "&4你未拥有管理员或临时管理员身份. &4已强行取消OP."
+    OPTimeOut: "&a你的临时管理员身份已到期. &a你已不再是管理员."
+    WrongPassword: "&4密码错误"
+    AlreadyOperator: "&4该玩家拥有管理员身份"
+    GiveOperator: "&e你已添加了一个管理员"
+    GiveOperatorForPlayer: "&a你已被 &e{player} &a授予了管理员身份"
+    NotOperator: "&4该玩家未拥有管理员身份"
+    RemoveOperator: "&e你已经移除了一个管理员"
+    RemoveOperatorForPlayer: "&a你已被 &e{player} &a取消了管理员身份"
+    AddedBannedCommand: "&e你已添加了一个禁止命令"
+    AlreadyBannedCommand: "&4该命令已被禁止"
+    NotBannedCommand: "&4该命令没有被禁止"
+    RemoveBannedCommand: "&e你已从禁止命令中移除了该命令"
+    ReloadedPlugin: "&a插件已重载"
+    OPList: "&e管理员列表:"
+    PermissionDenied: "&4你没有权限执行此操作"
+
+  en_US:
+    EnablingPlugin: "&b&lLoading MK-OPManager..."
+    EnabledPlugin: "&b&lPlugin loaded."
+    DisablingPlugin: "&b&lDisabling MK-OPManager..."
+    DisabledPlugin: "&b&lPlugin Unloaded."
+    NotDefinedPassword: "&6No Password defined,set to initial value"
+    NotDefineInterval: "&6No detection interval defined, set to initial value"
+    CommandDenied: "&4You not have Permission to execute this command!"
+    OPDenied: "&4You do not have Super Administrator status. Operation denied."
+    OPCheckDenied: "&4You do not have Administrator or Temporary Administrator status. &cForced OP cancellation."
+    OPTimeOut: "&aYour Temporary Operator status has expired. &aYou are no longer an administrator."
+    WrongPassword: "&4Wrong Password"
+    AlreadyOperator: "&eThe player is already an Operator"
+    GiveOperator: "&eYou have added an Operator"
+    GiveOperatorForPlayer: "&aYou have been granted &e&lOperator &aIdentity by &e{player}"
+    NotOperator: "&4The player not an Operator"
+    RemoveOperator: "&eYou have removed an Operator"
+    RemoveOperatorForPlayer: "&aYou have been deprived &e&lOperator &aIdentity by &e{player}"
+    AddedBannedCommand: "&eYou have added a ban command"
+    AlreadyBannedCommand: "&4This Command already banned"
+    NotBannedCommand: "&4This command is not prohibited"
+    RemoveBannedCommand: "&eYou have removed this command from the prohibit command"
+    ReloadedPlugin: "&aPlugin Reloaded"
+    OPList: "&eAdministrators:"
+    PermissionDenied: "&4You not have permission perform this operation"

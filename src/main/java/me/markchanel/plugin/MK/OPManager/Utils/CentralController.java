@@ -6,6 +6,7 @@ import me.markchanel.plugin.MK.OPManager.Listeners.CommandReciveListeners;
 import me.markchanel.plugin.MK.OPManager.Listeners.OPListener;
 import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Tasks.CheckServerPlayers;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
 import me.markchanel.plugin.MK.OPManager.i18n.i18nManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -56,7 +57,6 @@ public class CentralController {
         loadVersion();
         checkIntegrity();
         loadConfig();
-        loadMessages();
         loadCommand();
         loadListeners();
         launchTask();
@@ -116,23 +116,19 @@ public class CentralController {
         }
     }
 
-    private void loadMessages(){
-        im.loadMessages();
-    }
-
     private void loadConfig() {
         FileConfiguration fc = new YamlConfiguration();
         try {
             fc.load(ConfigFile);
             if (fc.get("General.Password") == null) {
-                main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l未定义密码,已恢复至初始密码");
+                main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.NotDefinedPassword.getMessage());
                 fc.set("General.Password", "Mark_Chanel_Password");
                 fc.save(ConfigFile);
             }
             Password = fc.getString("General.Password");
 
             if (fc.get("General.CheckInterval") == null) {
-                main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l未定义检测时间,已恢复至初始状态");
+                main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.NotDefinedInterval.getMessage());
                 fc.set("General.CheckInterval", 1);
                 fc.save(ConfigFile);
             }

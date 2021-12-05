@@ -2,6 +2,8 @@ package me.markchanel.plugin.MK.OPManager.Commands;
 
 import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Utils.CentralController;
+import me.markchanel.plugin.MK.OPManager.i18n.Messages;
+import me.markchanel.plugin.MK.OPManager.i18n.StringConvert;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -23,24 +25,26 @@ public class addOP{
     public void run() {
         String password = Args.get(Args.size() - 1);
         if (!password.equals(CentralController.getPassword())) {
-            Sender.sendMessage(Main.Prefix + "§c§l密码错误");
+            Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());
             return;
         }
         Player targetP = Bukkit.getPlayer(Args.get(1));
         if(CentralController.getOPs().containsKey(targetP.getName()) ||
                 CentralController.getSuperAdministrators().contains(targetP.getName())){
-            Sender.sendMessage(Main.Prefix + "§c§l该玩家已是管理员");
+            Sender.sendMessage(Main.Prefix + Messages.AlreadyOperator.getMessage());
             return;
         }
-        targetP.sendMessage("§e你已被 " + Sender.getName() + " 授予了管理员.");
+        Sender.sendMessage(Main.Prefix + Messages.GiveOperator.getMessage());
         CentralController.getOPs().put(targetP.getName(), true);
+        targetP.setOp(true);
+        targetP.sendMessage(StringConvert.convert(Messages.GiveOperatorForPlayer.getMessage(), "{player}",Sender.getName()));
     }
 
     public void start() {
-        if(!(Sender instanceof ConsoleCommandSender) ||
-                !CentralController.getSuperAdministrators().contains(Sender.getName()) ||
+        if(!(Sender instanceof ConsoleCommandSender) &&
+                !CentralController.getSuperAdministrators().contains(Sender.getName()) &&
                 !Sender.hasPermission("mkopmanager.admin")){
-            Sender.sendMessage(Main.Prefix + "§c§l你没有使用该命令的权限");
+            Sender.sendMessage(Main.Prefix + Messages.PermissionDenied);
             return;
         }
         run();
