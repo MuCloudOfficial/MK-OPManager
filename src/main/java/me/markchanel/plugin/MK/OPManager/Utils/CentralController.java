@@ -23,8 +23,8 @@ import java.util.*;
 
 public class CentralController {
 
-    private Main main;
-    private i18nManager im = new i18nManager();
+    private final Main main;
+    private i18nManager im;
     private static String Version = null;
 
     private static File ConfigFolder;
@@ -46,21 +46,29 @@ public class CentralController {
 
     public CentralController(Main plugin){
         main = plugin;
-        ConfigFolder = new File(main.getDataFolder().getAbsolutePath());
-        ConfigFile = new File(ConfigFolder + File.separator + "config.yml");
-        SettingsFile = new File(ConfigFolder + File.separator + "settings.yml");
     }
 
-    public CentralController(){}
+    public void Preload(){
+        loadVersion();
+        ConfigFolder = main.getDataFolder();
+        ConfigFile = new File(main.getDataFolder().getAbsolutePath() + File.separator + "config.yml");
+        SettingsFile = new File(main.getDataFolder().getAbsolutePath() + File.separator + "settings.yml");
+        try {
+            checkIntegrity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        im = new i18nManager(main);
+        im.readFile();
+        im.loadMessages();
+    }
 
     public void startPlugin(){
-        loadVersion();
-        checkIntegrity();
+        EssentialsHook();
         loadConfig();
         loadCommand();
         loadListeners();
         launchTask();
-        EssentialsHook();
     }
 
     private void loadVersion(){
@@ -83,7 +91,7 @@ public class CentralController {
 
     private void EssentialsHook(){
         if(main.getServer().getPluginManager().isPluginEnabled("Essentials")){
-            main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§l已侦测到 Essentials");
+            main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§6§lEssentials Detected.");
             EssentialLoaded = true;
             EssentialsClass = Essentials.class;
             EssentialsConfigClass = IEssentials.class;
@@ -91,28 +99,33 @@ public class CentralController {
         }
     }
 
-    private void checkIntegrity(){
-        try {
-            if (!ConfigFolder.exists()){
-                ConfigFolder.mkdir();
-            }
-            if (!ConfigFile.exists()) {
-                main.saveDefaultConfig();
-            }
-            if (!SettingsFile.exists()) {
-                SettingsFile.createNewFile();
-                InputStream is = main.getClass().getClassLoader().getResourceAsStream("resources\\settings.yml");
-                OutputStream os = new FileOutputStream(SettingsFile.getAbsolutePath());
+    private void checkIntegrity() throws IOException{
+        if (!ConfigFolder.exists()){
+            ConfigFolder.mkdir();
+        }
+        if (!ConfigFile.exists()) {
+            ConfigFile.createNewFile();
+            try (InputStream is = main.getClass().getClassLoader().getResourceAsStream("resources/config.yml"); OutputStream os = new FileOutputStream(ConfigFile)) {
                 byte[] buf = new byte[1024];
                 int temp;
-                while((temp = is.read(buf)) > 0){
-                    os.write(buf,0,temp);
+                while ((temp = is.read(buf)) > 0) {
+                    os.write(buf, 0, temp);
                 }
-                is.close();
-                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }catch (IOException ioe){
-            ioe.printStackTrace();
+        }
+        if (!SettingsFile.exists()) {
+            SettingsFile.createNewFile();
+            try (InputStream is = main.getClass().getClassLoader().getResourceAsStream("resources/settings.yml"); OutputStream os = new FileOutputStream(SettingsFile)) {
+                byte[] buf = new byte[1024];
+                int temp;
+                while ((temp = is.read(buf)) > 0) {
+                    os.write(buf, 0, temp);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -188,7 +201,11 @@ public class CentralController {
         EssentialsUserClass = null;
         EssentialsConfigClass = null;
 
-        checkIntegrity();
+        try {
+            checkIntegrity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         EssentialsHook();
         loadConfig();
         im.setLocale();

@@ -14,17 +14,17 @@ import java.util.Objects;
 
 public class i18nManager{
 
+    private Main main;
     private final List<String> availableLocales = new ArrayList<>();
     private static String Locale = null;
     private File MessageFile;
 
-    public i18nManager() {
+    public i18nManager(Main plugin) {
+        main = plugin;
         availableLocales.add("zh_CN");
         availableLocales.add("en_US");
         availableLocales.add("zh_TW");
-        readFile();
         setLocale();
-        Bukkit.getServer().getConsoleSender().sendMessage("§b§lLocale §e§l" + Locale);
     }
 
     public void setLocale(){
@@ -35,25 +35,25 @@ public class i18nManager{
                 Bukkit.getServer().getConsoleSender().sendMessage(Main.Prefix + "§4§lLoad Error: Locale.  Will set en_US");
                 Locale = availableLocales.get(1);
             }
+            Locale = fc.getString("General.Locale");
+            Bukkit.getServer().getConsoleSender().sendMessage("§b§lLocale §e§l" + Locale);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
 
-    private void readFile(){
-        MessageFile = new File(CentralController.getConfigFile().getAbsoluteFile() + File.separator + "messages.yml");
+    public void readFile(){
+        MessageFile = new File(main.getDataFolder().getAbsoluteFile() + File.separator + "messages.yml");
         try {
             if(!MessageFile.exists()){
                 MessageFile.createNewFile();
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream("resources\\messages.yml");
-                OutputStream os = new FileOutputStream(MessageFile.getAbsolutePath());
-                byte[] buf = new byte[1024];
-                int temp;
-                while((temp = is.read(buf)) > 0){
-                    os.write(buf,0,temp);
+                try (InputStream is = main.getClass().getClassLoader().getResourceAsStream("resources/messages.yml"); OutputStream os = new FileOutputStream(MessageFile)) {
+                    byte[] buf = new byte[1024];
+                    int temp;
+                    while ((temp = is.read(buf)) > 0) {
+                        os.write(buf, 0, temp);
+                    }
                 }
-                is.close();
-                os.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class i18nManager{
             FileConfiguration f = new YamlConfiguration();
             f.load(MessageFile);
             for(Messages m : Messages.values()){
-                m.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + m.name()))));
+                m.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + "." + m.name()))));
             }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();

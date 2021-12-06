@@ -18,7 +18,7 @@ public class CheckServerPlayers extends BukkitRunnable {
 
     public CheckServerPlayers(Main plugin){
         main = plugin;
-        cc = new CentralController();
+        cc = new CentralController(main);
     }
 
     @Override

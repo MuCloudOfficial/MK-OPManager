@@ -6,6 +6,7 @@ public enum Messages {
     EnabledPlugin("Messages.EnabledPlugin.Lost"),
     DisablingPlugin("Messages.DisablingPlugin.Lost"),
     DisabledPlugin("Messages.DisabledPlugin.Lost"),
+    EssentialsDetected("Messages.EssentialsDetected.Lost"),
     NotDefinedPassword("Messages.NotDefinedPassword.Lost"),
     NotDefinedInterval("Messages.NotDefineInterval.Lost"),
     CommandDenied("Messages.CommandDenied.Lost"),
