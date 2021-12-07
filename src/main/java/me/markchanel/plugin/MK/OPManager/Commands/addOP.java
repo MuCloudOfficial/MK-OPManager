@@ -23,15 +23,24 @@ public class addOP{
     }
 
     public void run() {
+        if(Args.size() < 3){
+            Sender.sendMessage(Main.Prefix + Messages.ArgsNotEnough.getMessage());
+            return;
+        }
         String password = Args.get(Args.size() - 1);
         if (!password.equals(CentralController.getPassword())) {
             Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());
             return;
         }
-        Player targetP = Bukkit.getPlayer(Args.get(1));
-        if(CentralController.getOPs().containsKey(targetP.getName()) ||
-                CentralController.getSuperAdministrators().contains(targetP.getName())){
+        Player targetP = Bukkit.getPlayerExact(Args.get(1));
+        if(CentralController.getOPs().containsKey(Args.get(1)) ||
+                CentralController.getSuperAdministrators().contains(Args.get(1))){
             Sender.sendMessage(Main.Prefix + Messages.AlreadyOperator.getMessage());
+            return;
+        }
+        if(targetP == null){
+            CentralController.getRemainingOPs().add(Args.get(1));
+            Sender.sendMessage(Main.Prefix + Messages.GiveOperator.getMessage());
             return;
         }
         Sender.sendMessage(Main.Prefix + Messages.GiveOperator.getMessage());

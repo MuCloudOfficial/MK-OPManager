@@ -18,7 +18,7 @@ public class OPListener implements Listener {
 
     // 检测玩家使用 /op 命令
     @EventHandler
-    public void Listener(PlayerCommandPreprocessEvent pcpe){
+    public void onListen(PlayerCommandPreprocessEvent pcpe){
         Player target = pcpe.getPlayer();
         if (pcpe.getMessage().substring(1).toLowerCase().startsWith("op")){
             if (!CentralController.getSuperAdministrators().contains(target.getName())){

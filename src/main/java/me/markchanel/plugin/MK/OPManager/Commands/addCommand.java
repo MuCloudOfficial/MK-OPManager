@@ -20,6 +20,10 @@ public class addCommand{
     }
 
     public void run() {
+        if(Args.size() < 3){
+            Sender.sendMessage(Main.Prefix + Messages.ArgsNotEnough.getMessage());
+            return;
+        }
         String password = Args.get(Args.size() - 1);
         if (!password.equals(CentralController.getPassword())) {
             Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());

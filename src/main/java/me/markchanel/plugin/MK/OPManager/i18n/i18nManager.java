@@ -36,7 +36,7 @@ public class i18nManager{
                 Locale = availableLocales.get(1);
             }
             Locale = fc.getString("General.Locale");
-            Bukkit.getServer().getConsoleSender().sendMessage("§b§lLocale §e§l" + Locale);
+            Bukkit.getServer().getConsoleSender().sendMessage(Main.Prefix+ "§b§lLocale §e§l" + Locale);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -65,6 +65,11 @@ public class i18nManager{
             FileConfiguration f = new YamlConfiguration();
             f.load(MessageFile);
             for(Messages m : Messages.values()){
+                if(f.get("Messages." + Locale + "." + m.name()) == null){
+                    main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§b§lLoading Message:" + " §6" + m.name());
+                    continue;
+                }
+                main.getServer().getConsoleSender().sendMessage(Main.Prefix + "§b§lLoading Message:" + " §a" + m.name());
                 m.setMessage(StringConvert.convertOnlyColor(Objects.requireNonNull(f.getString("Messages." + Locale + "." + m.name()))));
             }
         } catch (IOException | InvalidConfigurationException e) {

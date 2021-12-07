@@ -17,8 +17,8 @@ public class reload {
     }
 
     private void run(){
-        Sender.sendMessage(Main.Prefix + Messages.ReloadedPlugin.getMessage());
         main.onReload();
+        Sender.sendMessage(Main.Prefix + Messages.ReloadedPlugin.getMessage());
     }
 
     public void start(){

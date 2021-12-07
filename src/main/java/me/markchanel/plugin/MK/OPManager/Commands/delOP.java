@@ -23,13 +23,26 @@ public class delOP{
     }
 
     public void run() {
+        if(Args.size() < 3){
+            Sender.sendMessage(Main.Prefix + Messages.ArgsNotEnough.getMessage());
+            return;
+        }
         String targetName = Args.get(1);
         String password = Args.get(Args.size() - 1);
         if(password.equals(CentralController.getPassword())){
             Sender.sendMessage(Main.Prefix + Messages.WrongPassword.getMessage());
             return;
         }
-        Player targetP = Bukkit.getPlayer(targetName);
+        if(CentralController.getRemainingOPs().contains(Args.get(1))){
+            CentralController.getRemainingOPs().remove(Args.get(1));
+            Sender.sendMessage(Main.Prefix + Messages.RemoveOperator);
+            return;
+        }
+        Player targetP = Bukkit.getPlayerExact(targetName);
+        if(targetP == null){
+            Sender.sendMessage(Main.Prefix + Messages.RemoveOperator);
+            return;
+        }
         if(!CentralController.getOPs().containsKey(targetName)){
             Sender.sendMessage(Main.Prefix + Messages.NotOperator.getMessage());
             return;

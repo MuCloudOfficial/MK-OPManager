@@ -31,7 +31,7 @@ public class listOP {
                 result2.deleteCharAt(result.lastIndexOf(","));
             }
         }
-        Sender.sendMessage(Main.Prefix + Messages.OPList);
+        Sender.sendMessage(Main.Prefix + Messages.OPList.getMessage());
         Sender.sendMessage(result.toString());
         Sender.sendMessage(result2.toString());
     }

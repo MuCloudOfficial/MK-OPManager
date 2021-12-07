@@ -2,7 +2,8 @@ package me.markchanel.plugin.MK.OPManager.Utils;
 
 import com.earth2me.essentials.User;
 import me.markchanel.plugin.MK.OPManager.Commands.CommandProcessor;
-import me.markchanel.plugin.MK.OPManager.Listeners.CommandReciveListeners;
+import me.markchanel.plugin.MK.OPManager.Listeners.ApplyRemainingOPChangeListener;
+import me.markchanel.plugin.MK.OPManager.Listeners.CommandReceiveListeners;
 import me.markchanel.plugin.MK.OPManager.Listeners.OPListener;
 import me.markchanel.plugin.MK.OPManager.Main;
 import me.markchanel.plugin.MK.OPManager.Tasks.CheckServerPlayers;
@@ -34,6 +35,7 @@ public class CentralController {
     private static List<String> SuperAdministrators = new ArrayList<>();
     private static List<String> BannedCommands = new ArrayList<>();
     private static Map<String, Boolean> OPs = new HashMap<>();
+    private static List<String> RemainingOPs = new ArrayList<>();
     private static int CheckInterval;
     private static String Password;
 
@@ -64,11 +66,13 @@ public class CentralController {
     }
 
     public void startPlugin(){
+        main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.EnablingPlugin.getMessage());
         EssentialsHook();
         loadConfig();
         loadCommand();
         loadListeners();
         launchTask();
+        main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.EnabledPlugin.getMessage());
     }
 
     private void loadVersion(){
@@ -178,8 +182,9 @@ public class CentralController {
     }
 
     private void loadListeners(){
-        Bukkit.getServer().getPluginManager().registerEvents(new CommandReciveListeners(),main);
+        Bukkit.getServer().getPluginManager().registerEvents(new CommandReceiveListeners(),main);
         Bukkit.getServer().getPluginManager().registerEvents(new OPListener(main),main);
+        Bukkit.getServer().getPluginManager().registerEvents(new ApplyRemainingOPChangeListener(),main);
     }
 
     private void unloadListeners(){
@@ -212,6 +217,7 @@ public class CentralController {
         im.loadMessages();
         loadListeners();
         launchTask();
+        main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.ReloadedPlugin.getMessage());
     }
 
     private void disableAllTempOP(){
@@ -223,18 +229,20 @@ public class CentralController {
     }
 
     public void disablePlugin(){
+        main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.DisablingPlugin.getMessage());
         Password = null;
         CheckInterval = 0;
         disableAllTempOP();
         OPs.clear();
         BannedCommands.clear();
         SuperAdministrators.clear();
-        im.clearMessages();
         EssentialLoaded = false;
         EssentialsUserClass = null;
         EssentialsConfigClass = null;
         interruptTask();
         unloadListeners();
+        main.getServer().getConsoleSender().sendMessage(Main.Prefix + Messages.DisabledPlugin.getMessage());
+        im.clearMessages();
     }
 
     public Class<?> getEssentialsUser(){
@@ -253,16 +261,8 @@ public class CentralController {
         return Version;
     }
 
-    public static File getConfigFolder() {
-        return ConfigFolder;
-    }
-
     public static File getConfigFile() {
         return ConfigFile;
-    }
-
-    public static File getSettingsFile() {
-        return SettingsFile;
     }
 
     public static List<String> getBannedCommands() {
@@ -273,8 +273,8 @@ public class CentralController {
         return OPs;
     }
 
-    public static int getCheckInterval() {
-        return CheckInterval;
+    public static List<String> getRemainingOPs() {
+        return RemainingOPs;
     }
 
     public static String getPassword() {

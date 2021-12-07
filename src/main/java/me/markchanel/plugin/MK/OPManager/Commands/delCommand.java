@@ -20,6 +20,10 @@ public class delCommand{
     }
 
     public void run() {
+        if(Args.size() < 3){
+            Sender.sendMessage(Main.Prefix + Messages.ArgsNotEnough.getMessage());
+            return;
+        }
         StringBuilder target = new StringBuilder();
         String password = Args.get(Args.size() - 1);
         if(password.equals(CentralController.getPassword())){

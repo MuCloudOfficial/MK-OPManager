@@ -5,22 +5,24 @@
 #                                       Author: Mark_Chanel
 #                欢迎联系我指出翻译错误
 #==========================================================
+Version: 1.2.1
 
 # 设置自定义语言.
 #  Custom Language Settings.
 Messages:
   zh_CN:
-    EnablingPlugin: "&b&l正在加载 MK-OPManager..."
-    EnabledPlugin: "&b&l加载完毕!"
-    DisablingPlugin: "&b&l正在关闭 MK-OPManager..."
-    DisabledPlugin: "&b&l卸载完毕!"
-    EssentialsDetected: "&e&l侦测到 Essentials. 启动 Essentials 相关功能 &7&l(&4&l实验性功能&7&l)"
-    NotDefinedPassword: "&6未定义密码,已恢复至初始值"
-    NotDefineInterval: "&6未定义检测间隔,已恢复至初始值"
-    CommandDenied: "&4你没有权限执行此命令!"
-    OPDenied: "&4你未拥有超级管理员身份. &c操作被拒绝."
-    OPCheckDenied: "&4你未拥有管理员或临时管理员身份. &4已强行取消OP."
-    OPTimeOut: "&a你的临时管理员身份已到期. &a你已不再是管理员."
+    EnablingPlugin: "&b&l正在加载 MK-OPManager"
+    EnabledPlugin: "&b&l加载完毕"
+    DisablingPlugin: "&b&l正在关闭 MK-OPManager"
+    DisabledPlugin: "&b&l卸载完毕"
+    EssentialsDetected: "&e&l侦测到 Essentials 启动 Essentials 相关功能 &7&l(&4&l实验性功能&7&l)"
+    NotDefinedPassword: "&6未定义密码 已恢复至初始值"
+    NotDefinedInterval: "&6未定义检测间隔 已恢复至初始值"
+    ArgsNotEnough: "&4参数不足 请重新输入"
+    CommandDenied: "&4你没有权限执行此命令"
+    OPDenied: "&4你未拥有超级管理员身份 &c操作被拒绝"
+    OPCheckDenied: "&4你未拥有管理员或临时管理员身份 &4已强行取消OP"
+    OPTimeOut: "&a你的临时管理员身份已到期 &a你已不再是管理员"
     WrongPassword: "&4密码错误"
     AlreadyOperator: "&4该玩家拥有管理员身份"
     GiveOperator: "&e你已添加了一个管理员"
@@ -43,7 +45,8 @@ Messages:
     DisabledPlugin: "&b&lPlugin Unloaded."
     EssentialsDetected: "&e&lEssentials Detected! Functionality about the Essentials module will be enabled &7&l(&4&lExperimental&7&l)"
     NotDefinedPassword: "&6No Password defined,set to initial value"
-    NotDefineInterval: "&6No detection interval defined, set to initial value"
+    NotDefinedInterval: "&6No detection interval defined, set to initial value"
+    ArgsNotEnough: "&4Not enough parameters,Please Re-Enter"
     CommandDenied: "&4You not have Permission to execute this command!"
     OPDenied: "&4You do not have Super Administrator status. Operation denied."
     OPCheckDenied: "&4You do not have Administrator or Temporary Administrator status. &cForced OP cancellation."

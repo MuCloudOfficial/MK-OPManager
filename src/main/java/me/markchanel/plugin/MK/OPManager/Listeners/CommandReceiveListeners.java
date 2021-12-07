@@ -7,11 +7,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class CommandReciveListeners implements Listener {
+public class CommandReceiveListeners implements Listener {
 
     // 检测玩家发出的命令
     @EventHandler
-    public void Listener(PlayerCommandPreprocessEvent pcpe){
+    public void onListen(PlayerCommandPreprocessEvent pcpe){
         Player target = pcpe.getPlayer();
         for(String s : CentralController.getBannedCommands()){
             if(pcpe.getMessage().substring(1).toLowerCase().startsWith(s)){
