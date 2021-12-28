@@ -4,8 +4,8 @@ main: me.markchanel.plugin.MK.OPManager.Main
 version: 1.1.0.Beta2
 #------------------------------------------------------------------------------
 api-version: 1.13
-author: Mark_Chanel
-website: https://gitee.com/markchanel/mk-opmanager
+author: ManGo_MilkTea
+website: https://gitee.com/ManGo_MilkTea/MK-OPManager
 softdepend: [Essentials]
 commands:
   mkopmanager:
@@ -14,11 +14,6 @@ commands:
     aliases: [mkom]
 
 permissions:
-  mkopmanager.help:
+  mkopmanager.admin:
     default: false
-  mkopmanager.addOP:
-    default: false
-  mkopmanager.addTempOP:
-    default: false
-  mkopmanager.addCommands:
-    default: false
+

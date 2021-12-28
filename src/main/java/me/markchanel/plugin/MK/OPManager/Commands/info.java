@@ -25,8 +25,8 @@ public class info{
 
     private void run_zh_CN(){
         Sender.sendMessage("§7§l| §b§lMK§7§l-§e§lOPManager  " + "§6§lVer §b§l" + CentralController.getVersion());
-        Sender.sendMessage("§7§l| §6作者: §7§lMark_Chanel");
-        Sender.sendMessage("§7§l| §6插件主页: §b https://gitee.com/markchanel/mk-opmanager");
+        Sender.sendMessage("§7§l| §6作者: §7§lManGo_MilkTea");
+        Sender.sendMessage("§7§l| §6插件主页: §b https://gitee.com/ManGo_MilkTea/MK-OPManager");
         Sender.sendMessage("§7§l| §7§m-----------------------§b§l命令概述§7§m---------------------------");
         Sender.sendMessage("§7§l| §6 /mkom addTempOP [玩家] [密码] [时间]");
         Sender.sendMessage("§7§l| §6 添加一个临时管理员");
@@ -47,8 +47,8 @@ public class info{
 
     private void run_en_US(){
         Sender.sendMessage("§7§l| §b§lMK§7§l-§e§lOPManager  " + "§6§lVer §b§l" + CentralController.getVersion());
-        Sender.sendMessage("§7§l| §6Author: §7§lMark_Chanel");
-        Sender.sendMessage("§7§l| §6Website: §b https://gitee.com/markchanel/mk-opmanager");
+        Sender.sendMessage("§7§l| §6Author: §7§lManGo_MilkTea");
+        Sender.sendMessage("§7§l| §6Website: §b https://gitee.com/ManGo_MilkTea/MK-OPManager");
         Sender.sendMessage("§7§l| §7§m----------------------§b§lCommands§7§m---------------------------");
         Sender.sendMessage("§7§l| §6 /mkom addTempOP [Player] [Password] [Time]          Add a Temporary Operator");
         Sender.sendMessage("§7§l| §6 /mkom addOP [Player] [Password]          Add a Operator");
