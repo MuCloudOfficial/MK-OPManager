@@ -47,7 +47,7 @@ public class delOP{
             Sender.sendMessage(Main.Prefix + Messages.NotOperator.getMessage());
             return;
         }
-        CentralController.getOPs().remove(targetName);
+        CentralController.modifyCommand(targetName,false);
         Sender.sendMessage(Main.Prefix + Messages.RemoveOperator);
         targetP.setOp(false);
         targetP.sendMessage(StringConvert.convert(Messages.RemoveOperatorForPlayer.getMessage(),"{player}",Sender.getName()));

@@ -40,11 +40,12 @@ public class addOP{
         }
         if(targetP == null){
             CentralController.getRemainingOPs().add(Args.get(1));
+            CentralController.modifyOP(Args.get(1),true);
             Sender.sendMessage(Main.Prefix + Messages.GiveOperator.getMessage());
             return;
         }
         Sender.sendMessage(Main.Prefix + Messages.GiveOperator.getMessage());
-        CentralController.getOPs().put(targetP.getName(), true);
+        CentralController.modifyOP(targetP.getName(),true);
         targetP.setOp(true);
         targetP.sendMessage(StringConvert.convert(Messages.GiveOperatorForPlayer.getMessage(), "{player}",Sender.getName()));
     }

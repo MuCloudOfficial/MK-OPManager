@@ -37,7 +37,7 @@ public class addCommand{
             Sender.sendMessage(Main.Prefix + Messages.AlreadyBannedCommand.getMessage());
             return;
         }
-        CentralController.getBannedCommands().add(target.toString());
+        CentralController.modifyCommand(target.toString(),true);
         Sender.sendMessage(Main.Prefix + Messages.AddedBannedCommand.getMessage());
     }
 

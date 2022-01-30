@@ -37,7 +37,7 @@ public class delCommand{
             Sender.sendMessage(Main.Prefix + Messages.NotBannedCommand.getMessage());
             return;
         }
-        CentralController.getBannedCommands().remove(target.toString());
+        CentralController.modifyCommand(target.toString(),false);
         Sender.sendMessage(Main.Prefix + Messages.RemoveBannedCommand.getMessage());
     }
 

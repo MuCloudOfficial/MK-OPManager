@@ -289,4 +289,38 @@ public class CentralController {
         return EssentialLoaded;
     }
 
+    public static void modifyOP(String playerName,boolean addTrueOrDeleteFalse){
+        try {
+            FileConfiguration fc = new YamlConfiguration();
+            fc.load(SettingsFile);
+            if(addTrueOrDeleteFalse){
+                OPs.put(playerName,true);
+                fc.set("WhiteList",OPs.keySet());
+            }else{
+                OPs.remove(playerName);
+                fc.set("WhiteList",OPs.keySet());
+            }
+            fc.save(SettingsFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void modifyCommand(String commandName,boolean addTrueOrDeleteFalse){
+        try{
+            FileConfiguration fc = new YamlConfiguration();
+            fc.load(SettingsFile);
+            if(addTrueOrDeleteFalse){
+                BannedCommands.add(commandName);
+                fc.set("BannedCommands",BannedCommands);
+            }else{
+                BannedCommands.remove(commandName);
+                fc.set("BannedCommands",BannedCommands);
+            }
+            fc.save(SettingsFile);
+        }catch(IOException | InvalidConfigurationException e){
+            e.printStackTrace();
+        }
+    }
+
 }
